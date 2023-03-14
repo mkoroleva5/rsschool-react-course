@@ -7,9 +7,6 @@ import { NotFoundPage } from './components/NotFoundPageComponent/NotFoundPage';
 import React from 'react';
 
 export class App extends React.Component {
-  constructor(props: object) {
-    super(props);
-  }
   render() {
     return (
       <>

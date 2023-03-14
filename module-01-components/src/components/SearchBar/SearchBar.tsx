@@ -3,10 +3,6 @@ import './SearchBar.css';
 import searchIcon from '../../assets/icons/search.svg';
 
 export class SearchBar extends React.Component {
-  constructor(props: object) {
-    super(props);
-  }
-
   state = {
     searchValue: localStorage.getItem('search-value') || '',
   };
@@ -22,9 +18,11 @@ export class SearchBar extends React.Component {
   };
 
   componentDidMount(): void {
-    const value = localStorage.getItem('search-value');
-    if (value) this.setState({ searchValue: value });
     window.addEventListener('beforeunload', this.handleSearchUpdate);
+  }
+
+  componentWillUnmount(): void {
+    window.removeEventListener('beforeunload', this.handleSearchUpdate);
   }
 
   render() {

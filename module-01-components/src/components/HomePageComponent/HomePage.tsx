@@ -5,10 +5,6 @@ import data from '../../data.json';
 import { Card } from '../../components/CardComponent/Card';
 
 export class HomePage extends React.Component {
-  constructor(props: object) {
-    super(props);
-  }
-
   render() {
     return (
       <section className="home__wrapper">

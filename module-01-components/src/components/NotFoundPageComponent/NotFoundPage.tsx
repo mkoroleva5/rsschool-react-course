@@ -2,9 +2,6 @@ import './NotFoundPage.css';
 import React from 'react';
 
 export class NotFoundPage extends React.Component {
-  constructor(props: object) {
-    super(props);
-  }
   render() {
     return (
       <div className="not-found-wrapper">

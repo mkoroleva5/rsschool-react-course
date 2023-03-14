@@ -4,9 +4,6 @@ import githubLogo from '../../assets/icons/github.png';
 import rsLogo from '../../assets/icons/rs-school.png';
 
 export class Footer extends React.Component {
-  constructor(props: object) {
-    super(props);
-  }
   render() {
     return (
       <footer className="footer">

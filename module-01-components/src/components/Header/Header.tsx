@@ -3,10 +3,6 @@ import { NavLink } from 'react-router-dom';
 import './Header.css';
 
 export class Header extends React.Component {
-  constructor(props: object) {
-    super(props);
-  }
-
   render() {
     return (
       <header className="header">

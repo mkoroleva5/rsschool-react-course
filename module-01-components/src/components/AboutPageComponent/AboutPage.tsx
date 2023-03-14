@@ -3,9 +3,6 @@ import './AboutPage.css';
 import catImage from '../../assets/images/cat.jpg';
 
 export class AboutPage extends React.Component {
-  constructor(props: object) {
-    super(props);
-  }
   render() {
     return (
       <section className="about__wrapper">
