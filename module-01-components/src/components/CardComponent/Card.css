@@ -1,0 +1,105 @@
+.card__wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  max-width: 20rem;
+  height: auto;
+  box-shadow: 1px 1px 9px -5px gray;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.card__image {
+  width: 100%;
+  max-height: 50%;
+  object-fit: cover;
+  aspect-ratio: 1;
+}
+
+.card__info {
+  padding: 0 1rem;
+}
+
+.card__title,
+.card__breed,
+.card__text,
+.card__gender {
+  margin: 0.4rem 0;
+}
+
+.card__gender {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  font-weight: 700;
+  color: rgb(200, 200, 200);
+}
+
+.card__text {
+  font-size: 0.9rem;
+}
+
+.card__button {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.card__button_icon {
+  transition: all 0.2s ease-in-out;
+}
+
+.card__button:hover .card__button_icon {
+  transform: scale(1.1);
+}
+
+.favourite {
+  fill: rgb(232, 215, 28);
+  stroke: rgb(232, 215, 28);
+}
+
+.card__rating {
+  width: 9rem;
+  padding: 0 1rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  user-select: none;
+}
+
+.heart-ratings {
+  unicode-bidi: bidi-override;
+  color: #dcdcdc;
+  font-size: 42px;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.fill-ratings {
+  color: #ff807a;
+  padding: 0;
+  position: absolute;
+  z-index: 1;
+  display: block;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+span {
+  display: inline-block;
+}
+
+.empty-ratings {
+  padding: 0;
+  display: block;
+  z-index: 0;
+}

@@ -26,6 +26,7 @@ export class SearchBar extends React.Component {
     if (value) this.setState({ searchValue: value });
     window.addEventListener('beforeunload', this.handleSearchUpdate);
   }
+
   render() {
     return (
       <form
