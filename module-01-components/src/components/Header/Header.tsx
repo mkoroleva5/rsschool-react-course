@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './Header.css';
 
 export class Header extends React.Component {
@@ -7,32 +7,15 @@ export class Header extends React.Component {
     super(props);
   }
 
-  state = {
-    homeActive: true,
-    aboutActive: false,
-  };
-
   render() {
     return (
       <header className="header">
-        <Link
-          className={this.state.homeActive === true ? 'link active' : 'link'}
-          to="/"
-          onClick={() => {
-            this.setState({ homeActive: true, aboutActive: false });
-          }}
-        >
+        <NavLink className="link" to="/">
           Home
-        </Link>
-        <Link
-          className={this.state.aboutActive === true ? 'link active' : 'link'}
-          to="/about"
-          onClick={() => {
-            this.setState({ homeActive: false, aboutActive: true });
-          }}
-        >
+        </NavLink>
+        <NavLink className="link" to="/about">
           About Us
-        </Link>
+        </NavLink>
       </header>
     );
   }
