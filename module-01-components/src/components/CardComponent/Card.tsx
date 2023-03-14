@@ -12,27 +12,29 @@ interface CardProps {
   image: string;
 }
 
-export class Card extends React.Component<CardProps> {
-  constructor(props: CardProps) {
-    super(props);
-  }
+interface CardState {
+  favourite: boolean;
+}
 
+export class Card extends React.Component<CardProps, CardState> {
   state = {
-    favourite: localStorage.getItem(`card-${this.props.id}`) || false,
+    favourite: false,
   };
 
   handleFavouriteChange = () => {
-    console.log(this.state.favourite);
-
-    localStorage.setItem(`card-${this.props.id}`, `${!this.state.favourite}`);
-    this.setState({ favourite: !this.state.favourite });
+    localStorage.setItem(`card-${this.props.id}`, JSON.stringify(!this.state.favourite));
+    this.setState((prev) => ({
+      favourite: !prev.favourite,
+    }));
   };
 
   componentDidMount(): void {
     const value = localStorage.getItem(`card-${this.props.id}`);
-    if (value) this.setState({ favourite: value });
+    const result = value ? JSON.parse(value) : false;
+    this.setState({ favourite: result });
+
     window.addEventListener('beforeunload', () => {
-      localStorage.setItem(`card-${this.props.id}`, `${this.state.favourite}`);
+      localStorage.setItem(`card-${this.props.id}`, JSON.stringify(this.state.favourite));
     });
   }
 
@@ -49,7 +51,7 @@ export class Card extends React.Component<CardProps> {
           <p className="card__gender">{gender}</p>
           <div className="card__rating">
             <div className="heart-ratings">
-              <div className="fill-ratings" style={{ width: `${cuteness}%` }}>
+              <div className="fill-ratings" data-testid="rating" style={{ width: `${cuteness}%` }}>
                 <span>♥♥♥♥♥</span>
               </div>
               <div className="empty-ratings">
@@ -65,6 +67,7 @@ export class Card extends React.Component<CardProps> {
             }}
           >
             <svg
+              data-testid="star-svg"
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
@@ -74,7 +77,7 @@ export class Card extends React.Component<CardProps> {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className={`card__button_icon ${this.state.favourite === 'true' ? 'favourite' : ''}`}
+              className={`card__button_icon ${this.state.favourite ? 'favourite' : ''}`}
             >
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
             </svg>
