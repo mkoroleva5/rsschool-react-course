@@ -1,4 +1,5 @@
 import React from 'react';
+import './AboutPage.css';
 
 export class AboutPage extends React.Component {
   constructor(props: object) {
@@ -6,9 +7,9 @@ export class AboutPage extends React.Component {
   }
   render() {
     return (
-      <div>
-        <h1>About Us</h1>
-      </div>
+      <section className="about-wrapper">
+        <p>About Us</p>
+      </section>
     );
   }
 }

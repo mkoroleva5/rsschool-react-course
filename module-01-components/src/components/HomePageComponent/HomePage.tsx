@@ -8,9 +8,9 @@ export class HomePage extends React.Component {
   }
   render() {
     return (
-      <div className="home-wrapper">
+      <section className="home-wrapper">
         <SearchBar />
-      </div>
+      </section>
     );
   }
 }
