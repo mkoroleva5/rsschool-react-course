@@ -1,5 +1,5 @@
 import './App.css';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { HomePage } from './components/HomePageComponent/HomePage';
 import { AboutPage } from './components/AboutPageComponent/AboutPage';
 import { NotFoundPage } from './components/NotFoundPageComponent/NotFoundPage';
@@ -23,7 +23,8 @@ export class App extends React.Component {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="/404" element={<NotFoundPage />} />
+          <Route path="*" element={<Navigate to="/404" />} />
         </Routes>
       </>
     );
