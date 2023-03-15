@@ -39,11 +39,16 @@ export class Card extends React.Component<CardProps, CardState> {
   }
 
   render() {
-    const { name, description, breed, gender, cuteness, image } = this.props;
+    const { id, name, description, breed, gender, cuteness, image } = this.props;
 
     return (
       <div className="card__wrapper">
-        <img src={image || noImage} alt={name} className="card__image" />
+        <img
+          data-testid={`image-${id}`}
+          src={image || noImage}
+          alt={name}
+          className="card__image"
+        />
         <div className="card__info">
           <h3 className="card__title">{name}</h3>
           <p className="card__breed">{breed}</p>
@@ -60,6 +65,7 @@ export class Card extends React.Component<CardProps, CardState> {
             </div>
           </div>
           <button
+            data-testid={`star-button-${id}`}
             type="button"
             className="card__button"
             onClick={() => {
@@ -67,7 +73,7 @@ export class Card extends React.Component<CardProps, CardState> {
             }}
           >
             <svg
-              data-testid="star-svg"
+              data-testid={`star-svg-${id}`}
               xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"

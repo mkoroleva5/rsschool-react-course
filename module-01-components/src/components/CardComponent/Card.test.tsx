@@ -71,16 +71,16 @@ describe('Card tests', () => {
     const user = userEvent.setup();
     render(<Card {...item} />);
     await user.click(screen.getByRole('button'));
-    expect(screen.getByTestId('star-svg')).toHaveClass('favourite');
+    expect(screen.getByTestId('star-svg-1')).toHaveClass('favourite');
   });
 
-  it('sets data to local storage', () => {
+  it('sets data to localStorage', () => {
     render(<Card {...item} id={1} />);
     window.dispatchEvent(new Event('beforeunload'));
     expect(window.localStorage.getItem('card-1')).toEqual('false');
   });
 
-  it('stores data in local storage after click', async () => {
+  it('stores data in localStorage after click', async () => {
     const user = userEvent.setup();
     render(<Card {...item} id={1} />);
     await user.click(screen.getByRole('button'));
@@ -88,10 +88,10 @@ describe('Card tests', () => {
     expect(window.localStorage.getItem('card-1')).toEqual('true');
   });
 
-  it('has facourite class when local storage is changed', () => {
+  it('has favourite class when local storage is changed', () => {
     const value = true;
     window.localStorage.setItem('card-1', JSON.stringify(value));
     render(<Card {...item} id={1} />);
-    expect(screen.getByTestId('star-svg')).toHaveClass('favourite');
+    expect(screen.getByTestId('star-svg-1')).toHaveClass('favourite');
   });
 });

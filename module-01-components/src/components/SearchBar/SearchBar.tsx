@@ -13,8 +13,8 @@ export class SearchBar extends React.Component {
   };
 
   handleSearchUpdate = () => {
-    localStorage.setItem('search-value', this.state.searchValue);
     this.setState({ searchValue: '' });
+    localStorage.setItem('search-value', this.state.searchValue);
   };
 
   componentDidMount(): void {
@@ -23,14 +23,14 @@ export class SearchBar extends React.Component {
 
   componentWillUnmount(): void {
     window.removeEventListener('beforeunload', this.handleSearchUpdate);
+    localStorage.setItem('search-value', this.state.searchValue);
   }
 
   render() {
     return (
       <form
         className="search__wrapper"
-        onSubmit={(e) => {
-          e.preventDefault();
+        onSubmit={() => {
           this.handleSearchUpdate();
         }}
       >
