@@ -2,6 +2,7 @@
   width: 25rem;
   margin: 2em 0;
   position: relative;
+  left: -2rem;
 }
 
 .search__input {
