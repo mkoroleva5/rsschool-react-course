@@ -1,26 +1,42 @@
 .header {
+  position: relative;
   height: 5rem;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  padding: 0 5rem;
   gap: 5rem;
   background-color: var(--bg-color);
   color: var(--white-color);
   font-size: 1.4rem;
 }
 
-.link {
+.header__logo {
+  width: 3rem;
+  margin-top: 0.5rem;
+}
+
+.header__nav {
+  display: flex;
+  gap: 5rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.header__link {
   color: var(--white-color);
   font-weight: 500;
   text-decoration: none;
   transition: all 0.3s ease-in-out;
 }
 
-.link:hover {
+.header__link:hover {
   color: var(--active-color);
 }
 
-.link:active {
+.header__link:active {
   color: rgb(43, 46, 70);
 }
 
