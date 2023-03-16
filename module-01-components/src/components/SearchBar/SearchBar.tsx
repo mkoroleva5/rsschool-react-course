@@ -30,7 +30,8 @@ export class SearchBar extends React.Component {
     return (
       <form
         className="search__wrapper"
-        onSubmit={() => {
+        onSubmit={(e) => {
+          e.preventDefault();
           this.handleSearchUpdate();
         }}
       >

@@ -1,5 +1,5 @@
 import './App.css';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from './components/Layout/Layout';
 import { HomePage } from './components/HomePageComponent/HomePage';
 import { AboutPage } from './components/AboutPageComponent/AboutPage';
@@ -9,7 +9,7 @@ import React from 'react';
 export class App extends React.Component {
   render() {
     return (
-      <>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<HomePage />} />
@@ -18,7 +18,7 @@ export class App extends React.Component {
             <Route path="*" element={<Navigate to="/404" />} />
           </Route>
         </Routes>
-      </>
+      </BrowserRouter>
     );
   }
 }
