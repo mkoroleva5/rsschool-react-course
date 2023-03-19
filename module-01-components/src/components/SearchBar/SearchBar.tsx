@@ -45,9 +45,7 @@ export class SearchBar extends React.Component {
             this.handleSearchChange(e);
           }}
         />
-        <label className="search__label" htmlFor="name">
-          Search
-        </label>
+        <label className="search__label">Search</label>
         <button className="search__button" type="submit">
           <img className="search__icon" src={searchIcon} alt="Search" />
         </button>
