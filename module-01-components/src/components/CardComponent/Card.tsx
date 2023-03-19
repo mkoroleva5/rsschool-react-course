@@ -38,6 +38,12 @@ export class Card extends React.Component<CardProps, CardState> {
     });
   }
 
+  componentWillUnmount(): void {
+    window.removeEventListener('beforeunload', () => {
+      localStorage.setItem(`card-${this.props.id}`, JSON.stringify(this.state.favourite));
+    });
+  }
+
   render() {
     const { id, name, description, breed, gender, cuteness, image } = this.props;
 
