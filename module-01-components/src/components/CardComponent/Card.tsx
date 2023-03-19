@@ -24,7 +24,7 @@ export class Card extends React.Component<CardProps, CardState> {
   cardName = `card-${this.props.id}`;
 
   handleFavouriteChange = () => {
-    localStorage.setItem(this.cardName, JSON.stringify(!this.state.favourite));
+    localStorage.setItem(this.cardName, `${!this.state.favourite}`);
     this.setState((prev) => ({
       favourite: !prev.favourite,
     }));
@@ -32,17 +32,17 @@ export class Card extends React.Component<CardProps, CardState> {
 
   componentDidMount(): void {
     const value = localStorage.getItem(this.cardName);
-    const result = value ? JSON.parse(value) : false;
+    const result = value ? (value === 'true' ? true : false) : false;
     this.setState({ favourite: result });
 
     window.addEventListener('beforeunload', () => {
-      localStorage.setItem(this.cardName, JSON.stringify(this.state.favourite));
+      localStorage.setItem(this.cardName, `${this.state.favourite}`);
     });
   }
 
   componentWillUnmount(): void {
     window.removeEventListener('beforeunload', () => {
-      localStorage.setItem(this.cardName, JSON.stringify(this.state.favourite));
+      localStorage.setItem(this.cardName, `${this.state.favourite}`);
     });
   }
 
