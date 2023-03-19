@@ -3,34 +3,7 @@ import { vi } from 'vitest';
 import { SearchBar } from './SearchBar';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
-
-class LocalStorageMock {
-  store: Record<string, string>;
-
-  constructor() {
-    this.store = {};
-  }
-
-  clear() {
-    this.store = {};
-  }
-
-  get length() {
-    return Object.keys(this.store).length;
-  }
-
-  getItem(key: string) {
-    return this.store[key] || null;
-  }
-
-  setItem(key: string, value: unknown) {
-    this.store[key] = String(value);
-  }
-
-  removeItem(key: string) {
-    delete this.store[key];
-  }
-}
+import { LocalStorageMock } from '../../components/CardComponent/Card.test';
 
 describe('Cards wrapper tests', () => {
   beforeEach(() => {

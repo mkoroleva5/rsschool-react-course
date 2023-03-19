@@ -8,7 +8,7 @@ import noImage from '../../assets/images/default.jpg';
 
 const item = data[0];
 
-class LocalStorageMock {
+export class LocalStorageMock {
   store: Record<string, string>;
 
   constructor() {

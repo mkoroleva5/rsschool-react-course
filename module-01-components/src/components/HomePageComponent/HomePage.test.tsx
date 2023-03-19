@@ -6,36 +6,9 @@ import userEvent from '@testing-library/user-event';
 import noImage from '../../assets/images/default.jpg';
 import { Card } from '../CardComponent/Card';
 import data from '../../data.json';
+import { LocalStorageMock } from '../../components/CardComponent/Card.test';
 
 const item = data[0];
-
-class LocalStorageMock {
-  store: Record<string, string>;
-
-  constructor() {
-    this.store = {};
-  }
-
-  clear() {
-    this.store = {};
-  }
-
-  get length() {
-    return Object.keys(this.store).length;
-  }
-
-  getItem(key: string) {
-    return this.store[key] || null;
-  }
-
-  setItem(key: string, value: unknown) {
-    this.store[key] = String(value);
-  }
-
-  removeItem(key: string) {
-    delete this.store[key];
-  }
-}
 
 describe('Cards wrapper tests', () => {
   beforeEach(() => {
