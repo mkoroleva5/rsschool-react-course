@@ -12,17 +12,17 @@ export class SearchBar extends React.Component {
     this.setState({ searchValue: value });
   };
 
-  handleSearchUpdate = () => {
+  handleSearchSubmit = () => {
     this.setState({ searchValue: '' });
     localStorage.setItem('search-value', this.state.searchValue);
   };
 
   componentDidMount(): void {
-    window.addEventListener('beforeunload', this.handleSearchUpdate);
+    window.addEventListener('beforeunload', this.handleSearchSubmit);
   }
 
   componentWillUnmount(): void {
-    window.removeEventListener('beforeunload', this.handleSearchUpdate);
+    window.removeEventListener('beforeunload', this.handleSearchSubmit);
     localStorage.setItem('search-value', this.state.searchValue);
   }
 
@@ -32,7 +32,7 @@ export class SearchBar extends React.Component {
         className="search__wrapper"
         onSubmit={(e) => {
           e.preventDefault();
-          this.handleSearchUpdate();
+          this.handleSearchSubmit();
         }}
       >
         <input
