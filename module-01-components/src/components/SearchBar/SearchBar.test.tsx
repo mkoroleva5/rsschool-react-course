@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { LocalStorageMock } from '../../components/CardComponent/Card.test';
 
-describe('Cards wrapper tests', () => {
+describe('Search bar tests', () => {
   beforeEach(() => {
     vi.stubGlobal('localStorage', new LocalStorageMock());
   });
