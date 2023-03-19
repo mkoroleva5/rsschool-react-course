@@ -21,26 +21,28 @@ export class Card extends React.Component<CardProps, CardState> {
     favourite: false,
   };
 
+  cardName = `card-${this.props.id}`;
+
   handleFavouriteChange = () => {
-    localStorage.setItem(`card-${this.props.id}`, JSON.stringify(!this.state.favourite));
+    localStorage.setItem(this.cardName, JSON.stringify(!this.state.favourite));
     this.setState((prev) => ({
       favourite: !prev.favourite,
     }));
   };
 
   componentDidMount(): void {
-    const value = localStorage.getItem(`card-${this.props.id}`);
+    const value = localStorage.getItem(this.cardName);
     const result = value ? JSON.parse(value) : false;
     this.setState({ favourite: result });
 
     window.addEventListener('beforeunload', () => {
-      localStorage.setItem(`card-${this.props.id}`, JSON.stringify(this.state.favourite));
+      localStorage.setItem(this.cardName, JSON.stringify(this.state.favourite));
     });
   }
 
   componentWillUnmount(): void {
     window.removeEventListener('beforeunload', () => {
-      localStorage.setItem(`card-${this.props.id}`, JSON.stringify(this.state.favourite));
+      localStorage.setItem(this.cardName, JSON.stringify(this.state.favourite));
     });
   }
 
