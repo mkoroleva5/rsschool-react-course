@@ -1,0 +1,41 @@
+.form__date {
+  width: 15rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+
+.form__date-input {
+  width: 90%;
+  height: 0.8rem;
+  font-size: 100%;
+  padding: 0.8em;
+  outline: none;
+  border: 2px solid rgb(200, 200, 200);
+  background-color: transparent;
+  border-radius: 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+.form__date-input:focus:invalid {
+  border-color: #ff807a;
+}
+
+.form__date-label {
+  position: absolute;
+  font-size: 0.9rem;
+  color: rgb(100, 100, 100);
+  margin-left: 1.6rem;
+  padding: 0 0.2em;
+  transform: translateY(-13px);
+  background-color: var(--white-color);
+  border-radius: 1rem;
+  width: fit-content;
+  pointer-events: none;
+}
+
+.form__date-input:focus,
+.form__date-input:valid {
+  border-color: var(--bg-color);
+}
