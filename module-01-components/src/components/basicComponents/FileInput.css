@@ -1,0 +1,26 @@
+.form__item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 15rem;
+  margin: 0;
+  position: relative;
+}
+
+.form__file {
+  padding: 0 0.5rem;
+}
+
+.form__file::file-selector-button {
+  height: 2rem;
+  border: 2px solid var(--bg-color);
+  border-radius: 20px;
+  background-color: transparent;
+  color: rgb(100, 100, 100);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.form__file::file-selector-button:hover {
+  transform: scale(1.03);
+}
