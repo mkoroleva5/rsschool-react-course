@@ -6,6 +6,8 @@ interface DateInputProps {
 }
 
 export class DateInput extends React.Component<DateInputProps> {
+  currentDate = new Date().toISOString().split('T')[0];
+
   render() {
     return (
       <div className="form__date">
@@ -16,6 +18,7 @@ export class DateInput extends React.Component<DateInputProps> {
           className="form__date-input"
           type="date"
           id="date"
+          max={this.currentDate}
           ref={this.props.inputRef}
           required
         ></input>

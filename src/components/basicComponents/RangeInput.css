@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  height: 5rem;
 }
 
 .form__range_label {

@@ -8,6 +8,7 @@ import { DateInput } from '../../components/basicComponents/DateInput';
 import { RadioInput } from '../../components/basicComponents/RadioInput';
 import { RangeInput } from '../../components/basicComponents/RangeInput';
 import { FileInput } from '../../components/basicComponents/FileInput';
+import { CheckboxInput } from '../../components/basicComponents/CheckboxInput';
 
 interface CatProps {
   id: number;
@@ -16,6 +17,7 @@ interface CatProps {
   description: string;
   gender: string;
   cuteness: number;
+  meals?: string;
   image: string;
 }
 
@@ -24,20 +26,24 @@ interface CatsStateProps {
   gender: string;
   breed: string;
   cuteness: number;
+  meals: string;
   image: string | ArrayBuffer;
   isNameEmpty: boolean;
 }
 
-export class CatsPage extends React.Component<unknown, CatsStateProps> {
+export class CatsPage extends React.Component<Record<string, never>, CatsStateProps> {
   inputNameRef = React.createRef<HTMLInputElement>();
   inputSelectRef = React.createRef<HTMLSelectElement>();
   inputDateRef = React.createRef<HTMLInputElement>();
   inputGenderRef = React.createRef<HTMLInputElement>();
   inputCutenessRef = React.createRef<HTMLInputElement>();
+  inputFishRef = React.createRef<HTMLInputElement>();
+  inputMeatRef = React.createRef<HTMLInputElement>();
+  inputMilkRef = React.createRef<HTMLInputElement>();
   inputFileRef = React.createRef<HTMLInputElement>();
 
-  constructor() {
-    super({});
+  constructor(props: Record<string, never>) {
+    super(props);
 
     const getCatsList = () => {
       const catsList = localStorage.getItem('cats-list');
@@ -56,6 +62,7 @@ export class CatsPage extends React.Component<unknown, CatsStateProps> {
       gender: '',
       breed: '',
       cuteness: 50,
+      meals: '',
       image: catImage,
       isNameEmpty: true,
     };
@@ -70,6 +77,7 @@ export class CatsPage extends React.Component<unknown, CatsStateProps> {
       description: `Date of birth: ${this.inputDateRef.current?.value}` || '',
       gender: this.state.gender,
       cuteness: this.state.cuteness,
+      meals: this.state.meals,
       image: `${this.state.image}`,
     });
 
@@ -78,10 +86,14 @@ export class CatsPage extends React.Component<unknown, CatsStateProps> {
     this.inputSelectRef.current!.value = '';
     this.inputDateRef.current!.value = '';
     this.inputGenderRef.current!.checked = false;
+    this.inputFishRef.current!.checked = false;
+    this.inputMeatRef.current!.checked = false;
+    this.inputMilkRef.current!.checked = false;
     this.inputFileRef.current!.value = '';
     this.setState(() => ({
       gender: '',
       cuteness: 50,
+      meals: '',
       isNameEmpty: true,
     }));
   }
@@ -137,10 +149,15 @@ export class CatsPage extends React.Component<unknown, CatsStateProps> {
     }));
   };
 
+  handleCheckboxChange = (value: string[]) => {
+    this.setState(() => ({
+      meals: value.join(', '),
+    }));
+  };
+
   handleImageUpload = (value: string | ArrayBuffer) => {
     if (value) {
       this.setState(() => ({
-        //image: URL.createObjectURL(value),
         image: value,
       }));
     }
@@ -181,6 +198,12 @@ export class CatsPage extends React.Component<unknown, CatsStateProps> {
               cuteness={this.state.cuteness}
               inputRef={this.inputCutenessRef}
               onInputChange={this.handleCutenessChange}
+            />
+            <CheckboxInput
+              inputFishRef={this.inputFishRef}
+              inputMeatRef={this.inputMeatRef}
+              inputMilkRef={this.inputMilkRef}
+              onInputChange={this.handleCheckboxChange}
             />
             <FileInput inputRef={this.inputFileRef} onInputChange={this.handleImageUpload} />
             <button className="cats__form_submit" type="submit">

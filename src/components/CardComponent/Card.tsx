@@ -11,6 +11,7 @@ interface CardProps {
   breed: string;
   gender: string;
   cuteness: number;
+  meals?: string;
   image: string;
   showFavourites?: boolean;
   isRemovable?: boolean;
@@ -29,30 +30,36 @@ export class Card extends React.Component<CardProps, CardState> {
   cardName = `card-${this.props.id}`;
 
   handleFavouriteChange = () => {
-    localStorage.setItem(this.cardName, `${!this.state.favourite}`);
-    this.setState((prev) => ({
-      favourite: !prev.favourite,
-    }));
+    if (this.props.showFavourites) {
+      localStorage.setItem(this.cardName, `${!this.state.favourite}`);
+      this.setState((prev) => ({
+        favourite: !prev.favourite,
+      }));
+    }
   };
 
   componentDidMount(): void {
-    const value = localStorage.getItem(this.cardName);
-    const result = value ? (value === 'true' ? true : false) : false;
-    this.setState({ favourite: result });
+    if (this.props.showFavourites) {
+      const value = localStorage.getItem(this.cardName);
+      const result = value ? (value === 'true' ? true : false) : false;
+      this.setState({ favourite: result });
 
-    window.addEventListener('beforeunload', () => {
-      localStorage.setItem(this.cardName, `${this.state.favourite}`);
-    });
+      window.addEventListener('beforeunload', () => {
+        localStorage.setItem(this.cardName, `${this.state.favourite}`);
+      });
+    }
   }
 
   componentWillUnmount(): void {
-    window.removeEventListener('beforeunload', () => {
-      localStorage.setItem(this.cardName, `${this.state.favourite}`);
-    });
+    if (this.props.showFavourites) {
+      window.removeEventListener('beforeunload', () => {
+        localStorage.setItem(this.cardName, `${this.state.favourite}`);
+      });
+    }
   }
 
   render() {
-    const { id, name, description, breed, gender, cuteness, image } = this.props;
+    const { id, name, description, breed, meals, gender, cuteness, image } = this.props;
 
     return (
       <div className="card__wrapper">
@@ -66,6 +73,7 @@ export class Card extends React.Component<CardProps, CardState> {
           <h3 className="card__title">{name}</h3>
           <p className="card__breed">{breed}</p>
           <p className="card__text">{description}</p>
+          {meals && <p className="card__text">Favourite meals: {meals}</p>}
           <p className="card__gender">{gender}</p>
           <div className="card__rating">
             <Rating size={35} cuteness={cuteness} />
