@@ -24,6 +24,7 @@
 }
 
 .card__info {
+  width: 90%;
   padding: 0 1rem;
 }
 
@@ -44,10 +45,10 @@
 
 .card__text {
   font-size: 0.9rem;
-  margin-bottom: 3rem;
 }
 
-.card__button {
+.card__button,
+.delete-button {
   position: absolute;
   bottom: 1rem;
   right: 1rem;
@@ -80,32 +81,30 @@
   user-select: none;
 }
 
-.heart-ratings {
-  unicode-bidi: bidi-override;
-  color: #dcdcdc;
-  font-size: 35px;
-  position: relative;
-  margin: 0;
-  padding: 0;
+.delete-button-icon {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
-.fill-ratings {
-  color: #ff807a;
-  padding: 0;
-  position: absolute;
-  z-index: 1;
-  display: block;
-  top: 0;
-  left: 0;
-  overflow: hidden;
+.delete-button:hover .delete-button-icon {
+  animation: rotate 1s normal linear infinite;
+  -webkit-animation: rotate 1s normal linear infinite;
 }
 
-span {
-  display: inline-block;
-}
-
-.empty-ratings {
-  padding: 0;
-  display: block;
-  z-index: 0;
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(0);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }

@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { Card } from './Card';
-import data from '../../data.json';
+import data from '../../data/data.json';
 import noImage from '../../assets/images/default.jpg';
 
 const item = data[0];

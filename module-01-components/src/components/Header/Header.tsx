@@ -14,6 +14,9 @@ export class Header extends React.Component {
           <NavLink className="header__link" to="/">
             Home
           </NavLink>
+          <NavLink className="header__link" to="/cats">
+            Cats
+          </NavLink>
           <NavLink className="header__link" to="/about">
             About Us
           </NavLink>

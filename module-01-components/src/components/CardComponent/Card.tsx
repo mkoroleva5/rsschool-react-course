@@ -1,6 +1,8 @@
 import React from 'react';
 import './Card.css';
 import noImage from '../../assets/images/default.jpg';
+import { Rating } from '../../components/basicComponents/Rating';
+import trashIcon from '../../assets/icons/trash.svg';
 
 interface CardProps {
   id: number;
@@ -10,6 +12,9 @@ interface CardProps {
   gender: string;
   cuteness: number;
   image: string;
+  showFavourites?: boolean;
+  isRemovable?: boolean;
+  onDelete?: (id: number) => void;
 }
 
 interface CardState {
@@ -63,39 +68,47 @@ export class Card extends React.Component<CardProps, CardState> {
           <p className="card__text">{description}</p>
           <p className="card__gender">{gender}</p>
           <div className="card__rating">
-            <div className="heart-ratings">
-              <div className="fill-ratings" data-testid="rating" style={{ width: `${cuteness}%` }}>
-                <span>♥♥♥♥♥</span>
-              </div>
-              <div className="empty-ratings">
-                <span>♥♥♥♥♥</span>
-              </div>
-            </div>
+            <Rating size={35} cuteness={cuteness} />
           </div>
-          <button
-            data-testid={`star-button-${id}`}
-            type="button"
-            className="card__button"
-            onClick={() => {
-              this.handleFavouriteChange();
-            }}
-          >
-            <svg
-              data-testid={`star-svg-${id}`}
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#dcdcdc"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={`card__button_icon ${this.state.favourite ? 'favourite' : ''}`}
+          {this.props.showFavourites && (
+            <button
+              data-testid={`star-button-${id}`}
+              type="button"
+              className="card__button"
+              onClick={() => {
+                this.handleFavouriteChange();
+              }}
             >
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-            </svg>
-          </button>
+              <svg
+                data-testid={`star-svg-${id}`}
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#dcdcdc"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={`card__button_icon ${this.state.favourite ? 'favourite' : ''}`}
+              >
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+            </button>
+          )}
+          {this.props.isRemovable && (
+            <button
+              type="button"
+              className="delete-button"
+              onClick={() => {
+                if (this.props.onDelete) {
+                  this.props.onDelete(id);
+                }
+              }}
+            >
+              <img className="delete-button-icon" src={trashIcon} alt="Delete" />
+            </button>
+          )}
         </div>
       </div>
     );
