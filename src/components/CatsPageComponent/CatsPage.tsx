@@ -51,7 +51,6 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
       try {
         return catsList ? (JSON.parse(catsList) as CatProps[]) : [];
       } catch (err) {
-        console.error(err);
         localStorage.removeItem('cats-list');
         return [];
       }

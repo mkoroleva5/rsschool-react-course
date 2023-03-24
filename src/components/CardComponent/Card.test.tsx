@@ -69,21 +69,42 @@ describe('Card tests', () => {
 
   it('changes class on click', async () => {
     const user = userEvent.setup();
-    render(<Card {...item} />);
+    render(<Card {...item} showFavourites={true} />);
     await user.click(screen.getByRole('button'));
     expect(screen.getByTestId('star-svg-1')).toHaveClass('favourite');
   });
 
   it('sets data to localStorage', () => {
-    render(<Card {...item} id={1} />);
+    render(<Card {...item} id={1} showFavourites={true} />);
     window.dispatchEvent(new Event('beforeunload'));
     expect(window.localStorage.getItem('card-1')).toEqual('false');
   });
 
+  it('returns right value', async () => {
+    const value = false;
+    window.localStorage.setItem('card-1', JSON.stringify(value));
+    render(<Card {...item} id={1} showFavourites={true} />);
+
+    expect(window.localStorage.getItem('card-1')).toEqual('false');
+  });
+
+  /*it.skip('remove saving in localStorage on component unmount ', () => {
+    const { unmount } = render(<Card {...item} id={1} showFavourites={true} />);
+
+    render(<Card {...item} id={1} showFavourites={true} />);
+
+    unmount();
+    window.localStorage.clear();
+
+    window.dispatchEvent(new Event('beforeunload'));
+
+    expect(window.localStorage.length).toEqual(0);
+  });*/
+
   it('stores data in localStorage after click', async () => {
     const user = userEvent.setup();
-    render(<Card {...item} id={1} />);
-    await user.click(screen.getByRole('button'));
+    render(<Card {...item} id={1} showFavourites={true} />);
+    await user.click(screen.getByTestId('star-button-1'));
     window.dispatchEvent(new Event('beforeunload'));
     expect(window.localStorage.getItem('card-1')).toEqual('true');
   });
@@ -91,7 +112,30 @@ describe('Card tests', () => {
   it('has favourite class when local storage is changed', () => {
     const value = true;
     window.localStorage.setItem('card-1', JSON.stringify(value));
-    render(<Card {...item} id={1} />);
+    render(<Card {...item} id={1} showFavourites={true} />);
     expect(screen.getByTestId('star-svg-1')).toHaveClass('favourite');
+  });
+
+  it('deletes data from localStorage when delete button is clicked', async () => {
+    const cats = [item];
+    window.localStorage.setItem('cats-list', JSON.stringify(cats));
+
+    render(
+      <Card
+        {...item}
+        showFavourites={false}
+        isRemovable={true}
+        onDelete={() => {
+          const deletedCatIndex = cats.findIndex((el) => el.id === item.id);
+          const newCats = cats.filter((_, i) => i !== deletedCatIndex);
+          localStorage.setItem('cats-list', JSON.stringify(newCats));
+        }}
+      />
+    );
+
+    await userEvent.click(screen.getByTestId(`delete-button-${item.id}`));
+    const newCatsList = window.localStorage.getItem('cats-list');
+    const catsListArray = newCatsList ? JSON.parse(newCatsList) : null;
+    expect(catsListArray).toEqual([]);
   });
 });

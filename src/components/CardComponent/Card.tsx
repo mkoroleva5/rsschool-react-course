@@ -29,9 +29,13 @@ export class Card extends React.Component<CardProps, CardState> {
 
   cardName = `card-${this.props.id}`;
 
+  setLS = () => {
+    localStorage.setItem(this.cardName, `${this.state.favourite}`);
+  };
+
   handleFavouriteChange = () => {
     if (this.props.showFavourites) {
-      localStorage.setItem(this.cardName, `${!this.state.favourite}`);
+      this.setLS();
       this.setState((prev) => ({
         favourite: !prev.favourite,
       }));
@@ -39,23 +43,25 @@ export class Card extends React.Component<CardProps, CardState> {
   };
 
   componentDidMount(): void {
+    const getValue = (value: string) => {
+      if (value === 'true') {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
     if (this.props.showFavourites) {
       const value = localStorage.getItem(this.cardName);
-      const result = value ? (value === 'true' ? true : false) : false;
+      const result = value ? getValue(value) : false;
       this.setState({ favourite: result });
 
-      window.addEventListener('beforeunload', () => {
-        localStorage.setItem(this.cardName, `${this.state.favourite}`);
-      });
+      window.addEventListener('beforeunload', this.setLS);
     }
   }
 
   componentWillUnmount(): void {
-    if (this.props.showFavourites) {
-      window.removeEventListener('beforeunload', () => {
-        localStorage.setItem(this.cardName, `${this.state.favourite}`);
-      });
-    }
+    window.removeEventListener('beforeunload', this.setLS);
   }
 
   render() {
@@ -68,6 +74,7 @@ export class Card extends React.Component<CardProps, CardState> {
           src={image || noImage}
           alt={name}
           className="card__image"
+          draggable={false}
         />
         <div className="card__info">
           <h3 className="card__title">{name}</h3>
@@ -106,6 +113,7 @@ export class Card extends React.Component<CardProps, CardState> {
           )}
           {this.props.isRemovable && (
             <button
+              data-testid={`delete-button-${id}`}
               type="button"
               className="delete-button"
               onClick={() => {

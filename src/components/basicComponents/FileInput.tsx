@@ -11,6 +11,7 @@ export class FileInput extends React.Component<FileInputProps> {
     return (
       <div className="form__item">
         <input
+          data-testid="file-input"
           className="form__file"
           type="file"
           accept=".jpg, .jpeg, .png, .gif"
