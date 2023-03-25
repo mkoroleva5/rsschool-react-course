@@ -19,6 +19,12 @@ export class CheckboxInput extends React.Component<CheckboxInputProps, CheckboxI
     meals: [],
   };
 
+  clearState = () => {
+    this.setState(() => ({
+      meals: [],
+    }));
+  };
+
   handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (e.target.checked) {

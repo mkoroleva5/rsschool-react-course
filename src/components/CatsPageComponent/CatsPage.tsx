@@ -40,6 +40,7 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
   inputMaleRef = React.createRef<HTMLInputElement>();
   inputFemaleRef = React.createRef<HTMLInputElement>();
   inputCutenessRef = React.createRef<HTMLInputElement>();
+  inputCheckboxesRef = React.createRef<CheckboxInput>();
   inputFishRef = React.createRef<HTMLInputElement>();
   inputMeatRef = React.createRef<HTMLInputElement>();
   inputMilkRef = React.createRef<HTMLInputElement>();
@@ -123,6 +124,7 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
       this.inputMeatRef.current!.checked = false;
       this.inputMilkRef.current!.checked = false;
       this.inputFileRef.current!.value = '';
+      this.inputCheckboxesRef.current!.clearState();
       this.setState(() => ({
         gender: '',
         cuteness: 50,
@@ -257,6 +259,7 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
               onInputChange={this.handleCutenessChange}
             />
             <CheckboxInput
+              ref={this.inputCheckboxesRef}
               isSubmitted={this.state.isSubmitted}
               inputFishRef={this.inputFishRef}
               inputMeatRef={this.inputMeatRef}
