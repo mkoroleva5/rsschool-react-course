@@ -1,7 +1,9 @@
 import React from 'react';
 import './FileInput.css';
+import { Tooltip } from './Tooltip';
 
 interface FileInputProps {
+  isSubmitted: boolean;
   inputRef: React.RefObject<HTMLInputElement>;
   onInputChange: (value: string | ArrayBuffer) => void;
 }
@@ -27,8 +29,10 @@ export class FileInput extends React.Component<FileInputProps> {
             };
             reader.readAsDataURL(file);
           }}
-          required
         ></input>
+        {this.props.isSubmitted && !this.props.inputRef.current?.value && (
+          <Tooltip message="Upload an image" />
+        )}
       </div>
     );
   }

@@ -34,11 +34,11 @@
   transition: all 0.3s ease-in-out;
 }
 
-.form__select:valid {
+.form__select:not(.invalid):valid {
   border-color: var(--bg-color);
 }
 
-.form__select:focus:invalid {
+.form__select:focus.invalid {
   border-color: #ff807a;
 }
 

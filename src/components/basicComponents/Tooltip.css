@@ -1,0 +1,27 @@
+.error {
+  position: absolute;
+  right: -17rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.error-text {
+  width: 15rem;
+  padding: 8px;
+  background-color: #ff807a;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.error-text::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -8px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px 8px 8px 0;
+  border-color: transparent #ff807a transparent transparent;
+}

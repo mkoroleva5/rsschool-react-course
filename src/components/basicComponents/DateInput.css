@@ -1,4 +1,5 @@
 .form__date {
+  position: relative;
   width: 15rem;
   margin: 0;
   display: flex;
@@ -18,7 +19,7 @@
   transition: all 0.3s ease-in-out;
 }
 
-.form__date-input:focus:invalid {
+.form__date-input:focus.invalid {
   border-color: #ff807a;
 }
 
@@ -35,7 +36,6 @@
   pointer-events: none;
 }
 
-.form__date-input:focus,
-.form__date-input:valid {
+.form__date-input:not(.invalid):focus {
   border-color: var(--bg-color);
 }

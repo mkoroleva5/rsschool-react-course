@@ -1,4 +1,14 @@
 .form__checkbox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.form__checkbox_title {
+  font-size: 0.9rem;
+}
+
+.form__checkbox_options {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -63,6 +73,10 @@
 .form__checkbox_input:checked ~ .form__checkbox_label > .checkbox:after {
   opacity: 1;
   transform: rotate(45deg) scale(1);
+}
+
+.meals-error {
+  transform: translate(0.9rem, -0.5rem);
 }
 
 @keyframes jelly {

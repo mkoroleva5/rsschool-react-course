@@ -1,8 +1,11 @@
 import React from 'react';
 import './RadioInput.css';
+import { Tooltip } from './Tooltip';
 
 interface RadioInputProps {
-  inputRef: React.RefObject<HTMLInputElement>;
+  isSubmitted: boolean;
+  inputMaleRef: React.RefObject<HTMLInputElement>;
+  inputFemaleRef: React.RefObject<HTMLInputElement>;
   gender: string;
   onInputChange: (value: string) => void;
 }
@@ -17,11 +20,10 @@ export class RadioInput extends React.Component<RadioInputProps> {
             type="radio"
             id="male"
             name="gender"
-            ref={this.props.inputRef}
+            ref={this.props.inputMaleRef}
             onChange={() => {
               this.props.onInputChange('M');
             }}
-            required
           ></input>
           <label
             className={`form__gender_label ${this.props.gender === 'M' ? 'active-gender' : ''}`}
@@ -36,11 +38,10 @@ export class RadioInput extends React.Component<RadioInputProps> {
             type="radio"
             id="female"
             name="gender"
-            ref={this.props.inputRef}
+            ref={this.props.inputFemaleRef}
             onChange={() => {
               this.props.onInputChange('F');
             }}
-            required
           ></input>
           <label
             className={`form__gender_label ${this.props.gender === 'F' ? 'active-gender' : ''}`}
@@ -49,6 +50,11 @@ export class RadioInput extends React.Component<RadioInputProps> {
             Female
           </label>
         </div>
+        {this.props.isSubmitted &&
+          this.props.inputMaleRef.current?.checked === false &&
+          this.props.inputFemaleRef.current?.checked === false && (
+            <Tooltip className="gender-error" message="Select a gender" />
+          )}
       </div>
     );
   }

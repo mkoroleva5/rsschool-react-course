@@ -14,7 +14,7 @@
   font-size: 100%;
   padding: 0.8em;
   outline: none;
-  border: 2px solid rgb(200, 200, 200);
+  border: 2px solid var(--bg-color);
   background-color: transparent;
   border-radius: 20px;
   transition: all 0.3s ease-in-out;
@@ -33,12 +33,12 @@
   border-radius: 1rem;
 }
 
-.form__input:focus:invalid,
-.form__input:not(:focus):invalid {
+.form__input:focus.invalid {
   border: 2px solid #ff807a;
 }
 
-.form__input:not(:focus):invalid.empty {
+.form__input.empty,
+.form__input:not(:focus) {
   border: 2px solid rgb(200, 200, 200);
 }
 
@@ -52,14 +52,9 @@
   background-color: var(--white-color);
 }
 
-.form__input:not(:focus):invalid ~ .empty {
+.form__input:not(:focus) ~ .empty {
   padding: 0.3em 0.6em;
   margin-left: 0.5em;
   transform: none;
   background-color: transparent;
-}
-
-.form__input:focus,
-.form__input:valid {
-  border-color: var(--bg-color);
 }

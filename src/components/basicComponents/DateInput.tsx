@@ -1,8 +1,11 @@
 import React from 'react';
 import './DateInput.css';
+import { Tooltip } from './Tooltip';
 
 interface DateInputProps {
+  isSubmitted: boolean;
   inputRef: React.RefObject<HTMLInputElement>;
+  onInputChange: () => void;
 }
 
 export class DateInput extends React.Component<DateInputProps> {
@@ -15,13 +18,18 @@ export class DateInput extends React.Component<DateInputProps> {
           Date of birth
         </label>
         <input
-          className="form__date-input"
+          className={`form__date-input ${!this.props.inputRef.current?.value ? 'invalid' : ''}`}
           type="date"
           id="date"
           max={this.currentDate}
           ref={this.props.inputRef}
-          required
+          onChange={() => {
+            this.props.onInputChange();
+          }}
         ></input>
+        {this.props.isSubmitted && !this.props.inputRef.current?.value && (
+          <Tooltip message="Enter a date of birth" />
+        )}
       </div>
     );
   }

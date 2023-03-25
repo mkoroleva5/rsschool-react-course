@@ -1,7 +1,9 @@
 import React from 'react';
 import './SelectInput.css';
+import { Tooltip } from './Tooltip';
 
 interface SelectInputProps {
+  isSubmitted: boolean;
   inputRef: React.RefObject<HTMLSelectElement>;
   onInputChange: (value: string) => void;
 }
@@ -11,14 +13,13 @@ export class SelectInput extends React.Component<SelectInputProps> {
     return (
       <div className="form__item">
         <select
-          className="form__select"
+          className={`form__select ${!this.props.inputRef.current?.value ? 'invalid' : ''}`}
           ref={this.props.inputRef}
           onChange={(e) => {
             const { value } = e.target;
             this.props.onInputChange(value);
           }}
           id="breed"
-          required
         >
           <option value="">Select a breed</option>
           <option className="form__select_option" value="Persian">
@@ -43,6 +44,9 @@ export class SelectInput extends React.Component<SelectInputProps> {
         <label className="form__select_label" htmlFor="breed">
           Breed
         </label>
+        {this.props.isSubmitted && !this.props.inputRef.current?.value && (
+          <Tooltip message="Select a breed" />
+        )}
       </div>
     );
   }

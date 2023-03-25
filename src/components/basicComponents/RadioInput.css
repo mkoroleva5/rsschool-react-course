@@ -1,4 +1,5 @@
 .form__gender_wrapper {
+  position: relative;
   width: 70%;
   display: flex;
   justify-content: center;
@@ -38,4 +39,8 @@
 
 .active-gender {
   color: rgb(149 155 206);
+}
+
+.gender-error {
+  transform: translateX(-2.75rem);
 }
