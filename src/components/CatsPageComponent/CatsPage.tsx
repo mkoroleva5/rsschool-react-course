@@ -31,6 +31,7 @@ interface CatsStateProps {
   isNameEmpty: boolean;
   isValid: boolean;
   isSubmitted: boolean;
+  isCreated: boolean;
 }
 
 export class CatsPage extends React.Component<Record<string, never>, CatsStateProps> {
@@ -70,6 +71,7 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
       isNameEmpty: true,
       isValid: false,
       isSubmitted: false,
+      isCreated: false,
     };
   }
 
@@ -114,7 +116,6 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
         image: `${this.state.image}`,
       });
 
-      setTimeout(() => alert('The cat has been created!'), 100);
       this.inputNameRef.current!.value = '';
       this.inputSelectRef.current!.value = '';
       this.inputDateRef.current!.value = '';
@@ -132,6 +133,7 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
         isNameEmpty: true,
         isValid: false,
         isSubmitted: false,
+        isCreated: true,
       }));
     }
   }
@@ -222,6 +224,21 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
   render() {
     return (
       <div className="cats__wrapper">
+        {this.state.isCreated && (
+          <button
+            type="button"
+            className="popup__wrapper"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                this.setState(() => ({
+                  isCreated: false,
+                }));
+              }
+            }}
+          >
+            <div className="popup__content">The cat has been created!</div>
+          </button>
+        )}
         <section className="cats__form_wrapper">
           <h1>Create your own cat</h1>
           <form
