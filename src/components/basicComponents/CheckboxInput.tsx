@@ -26,14 +26,14 @@ export class CheckboxInput extends React.Component<CheckboxInputProps, CheckboxI
   };
 
   handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
+    const { id } = e.target;
     if (e.target.checked) {
       this.setState((prevState) => ({
-        meals: [...prevState.meals, value],
+        meals: [...prevState.meals, id],
       }));
     } else {
       this.setState((prevState) => ({
-        meals: prevState.meals.filter((v: string) => v !== value),
+        meals: prevState.meals.filter((v: string) => v !== id),
       }));
     }
   };
@@ -57,7 +57,6 @@ export class CheckboxInput extends React.Component<CheckboxInputProps, CheckboxI
               className="form__checkbox_input"
               type="checkbox"
               id="fish"
-              value="Fish"
               ref={this.props.inputFishRef}
               onChange={(e) => {
                 this.handleChange(e);
@@ -73,7 +72,6 @@ export class CheckboxInput extends React.Component<CheckboxInputProps, CheckboxI
               className="form__checkbox_input"
               type="checkbox"
               id="meat"
-              value="Meat"
               ref={this.props.inputMeatRef}
               onChange={(e) => {
                 this.handleChange(e);
@@ -89,7 +87,6 @@ export class CheckboxInput extends React.Component<CheckboxInputProps, CheckboxI
               className="form__checkbox_input"
               type="checkbox"
               id="milk"
-              value="Milk"
               ref={this.props.inputMilkRef}
               onChange={(e) => {
                 this.handleChange(e);
