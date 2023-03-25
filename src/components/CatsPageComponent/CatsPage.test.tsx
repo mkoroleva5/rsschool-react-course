@@ -12,7 +12,7 @@ const cat = {
   description: 'Date of birth: 2023-03-04',
   gender: 'F',
   cuteness: 75,
-  meals: '',
+  meals: 'Fish',
   image: '',
 };
 
@@ -26,6 +26,43 @@ describe('CatsPage tests', () => {
 
   afterAll(() => {
     vi.unstubAllGlobals();
+    mockAlert.mockRestore();
+  });
+
+  it('adds a new cat when form is submitted', async () => {
+    window.localStorage.setItem('cats-list', JSON.stringify([]));
+    render(<CatsPage />);
+    const form = screen.getByTestId('form');
+    const inputSelect = screen.getByRole('combobox') as HTMLSelectElement;
+    const option = screen.getByRole('option', { name: 'Persian' });
+    const inputDate = screen.getByLabelText('Date of birth') as HTMLInputElement;
+    const date = new Date('2023-03-23').toISOString().slice(0, 10);
+    const inputMale = screen.getByRole('radio', { name: 'Male' });
+    const inputFish = screen.getByRole('checkbox', { name: 'Fish' });
+    const inputFile = screen.getByTestId('file-input') as HTMLInputElement;
+    const file = new File(['test image content'], 'test-image.png', {
+      type: 'image/png',
+    });
+
+    await userEvent.selectOptions(inputSelect, option);
+    await userEvent.type(inputDate, date);
+    await userEvent.click(inputMale);
+    await userEvent.click(inputFish);
+    fireEvent.change(inputFile, { target: { files: [file] } });
+    fireEvent.submit(form);
+
+    const tooltip = screen.getByText(/enter a name/i);
+    expect(tooltip).toBeInTheDocument();
+  });
+
+  it('deletes data from localStorage when delete button is clicked', async () => {
+    const cats = [cat];
+    window.localStorage.setItem('cats-list', JSON.stringify(cats));
+
+    render(<CatsPage />);
+
+    const meals = screen.getByText(/favourite meals: fish/i);
+    expect(meals).toBeInTheDocument();
   });
 
   it('sets data to localStorage', () => {
@@ -51,14 +88,34 @@ describe('CatsPage tests', () => {
     expect(parsedCatsList).toBe(null);
   });
 
+  it('displays a tooltip when form is sumbitted with invalid inputs', async () => {
+    render(<CatsPage />);
+    const form = screen.getByTestId('form');
+    fireEvent.submit(form);
+
+    const tooltip = screen.getByText(/enter a name/i);
+    expect(tooltip).toBeInTheDocument();
+  });
+
   it('adds className empty if text input is empty', async () => {
     render(<CatsPage />);
     const input = screen.getByRole('textbox') as HTMLInputElement;
 
-    await userEvent.type(input, 'test value');
-    expect(input).not.toHaveClass('empty');
-    fireEvent.submit(input);
     expect(input).toHaveClass('empty');
+    await userEvent.type(input, 'Cat');
+    expect(input).not.toHaveClass('empty');
+  });
+
+  it('displays a tooltip if text input is invalid', async () => {
+    render(<CatsPage />);
+    const input = screen.getByRole('textbox') as HTMLInputElement;
+
+    await userEvent.type(input, 'cat');
+    fireEvent.submit(input);
+    const tooltip = screen.getByText(
+      /the name must start with a capital letter and be between 3 and 12 characters long/i
+    );
+    expect(tooltip).toBeInTheDocument();
   });
 
   it('deletes data from localStorage when delete button is clicked', async () => {

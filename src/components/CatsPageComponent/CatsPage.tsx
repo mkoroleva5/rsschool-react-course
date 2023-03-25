@@ -225,6 +225,7 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
         <section className="cats__form_wrapper">
           <h1>Create your own cat</h1>
           <form
+            data-testid="form"
             className="cats__form"
             onSubmit={(e) => {
               this.handleSubmit(e);
