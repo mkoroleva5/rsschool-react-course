@@ -9,7 +9,7 @@
   width: 15rem;
   padding: 8px;
   background-color: #ff807a;
-  color: #fff;
+  color: var(--white-color);
   border-radius: 4px;
 }
 

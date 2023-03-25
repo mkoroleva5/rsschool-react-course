@@ -58,8 +58,8 @@
   height: 11px;
   opacity: 0;
   transform: rotate(45deg) scale(0);
-  border-right: 2px solid #fff;
-  border-bottom: 2px solid #fff;
+  border-right: 2px solid var(--white-color);
+  border-bottom: 2px solid var(--white-color);
   transition: all 0.3s ease;
   transition-delay: 0.15s;
 }

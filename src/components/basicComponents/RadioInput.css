@@ -42,5 +42,5 @@
 }
 
 .gender-error {
-  transform: translateX(-2.75rem);
+  transform: translate(-2.75rem, -1rem);
 }

@@ -88,19 +88,6 @@ describe('Card tests', () => {
     expect(window.localStorage.getItem('card-1')).toEqual('false');
   });
 
-  /*it.skip('remove saving in localStorage on component unmount ', () => {
-    const { unmount } = render(<Card {...item} id={1} showFavourites={true} />);
-
-    render(<Card {...item} id={1} showFavourites={true} />);
-
-    unmount();
-    window.localStorage.clear();
-
-    window.dispatchEvent(new Event('beforeunload'));
-
-    expect(window.localStorage.length).toEqual(0);
-  });*/
-
   it('stores data in localStorage after click', async () => {
     const user = userEvent.setup();
     render(<Card {...item} id={1} showFavourites={true} />);

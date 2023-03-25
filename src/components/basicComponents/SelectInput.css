@@ -34,7 +34,7 @@
   transition: all 0.3s ease-in-out;
 }
 
-.form__select:not(.invalid):valid {
+.form__select:focus:not(.invalid):valid {
   border-color: var(--bg-color);
 }
 
@@ -44,5 +44,5 @@
 
 .form__select_option:checked {
   background-color: var(--bg-color);
-  color: #fff;
+  color: var(--white-color);
 }
