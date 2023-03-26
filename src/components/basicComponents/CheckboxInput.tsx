@@ -7,46 +7,10 @@ interface CheckboxInputProps {
   inputFishRef: React.RefObject<HTMLInputElement>;
   inputMeatRef: React.RefObject<HTMLInputElement>;
   inputMilkRef: React.RefObject<HTMLInputElement>;
-  onInputChange: (value: string[]) => void;
+  onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-interface CheckboxInputStateProps {
-  meals: string[];
-}
-
-export class CheckboxInput extends React.Component<CheckboxInputProps, CheckboxInputStateProps> {
-  state = {
-    meals: [],
-  };
-
-  clearState = () => {
-    this.setState(() => ({
-      meals: [],
-    }));
-  };
-
-  handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { id } = e.target;
-    if (e.target.checked) {
-      this.setState((prevState) => ({
-        meals: [...prevState.meals, id],
-      }));
-    } else {
-      this.setState((prevState) => ({
-        meals: prevState.meals.filter((v: string) => v !== id),
-      }));
-    }
-  };
-
-  componentDidUpdate(
-    prevProps: Readonly<CheckboxInputProps>,
-    prevState: Readonly<CheckboxInputStateProps>
-  ) {
-    if (this.state.meals !== prevState.meals) {
-      this.props.onInputChange(this.state.meals);
-    }
-  }
-
+export class CheckboxInput extends React.Component<CheckboxInputProps> {
   render() {
     return (
       <div className="form__checkbox">
@@ -59,7 +23,7 @@ export class CheckboxInput extends React.Component<CheckboxInputProps, CheckboxI
               id="fish"
               ref={this.props.inputFishRef}
               onChange={(e) => {
-                this.handleChange(e);
+                this.props.onInputChange(e);
               }}
             ></input>
             <label className="form__checkbox_label" htmlFor="fish">
@@ -74,7 +38,7 @@ export class CheckboxInput extends React.Component<CheckboxInputProps, CheckboxI
               id="meat"
               ref={this.props.inputMeatRef}
               onChange={(e) => {
-                this.handleChange(e);
+                this.props.onInputChange(e);
               }}
             ></input>
             <label className="form__checkbox_label" htmlFor="meat">
@@ -89,7 +53,7 @@ export class CheckboxInput extends React.Component<CheckboxInputProps, CheckboxI
               id="milk"
               ref={this.props.inputMilkRef}
               onChange={(e) => {
-                this.handleChange(e);
+                this.props.onInputChange(e);
               }}
             ></input>
             <label className="form__checkbox_label" htmlFor="milk">

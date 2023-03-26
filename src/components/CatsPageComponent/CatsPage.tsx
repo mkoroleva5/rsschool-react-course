@@ -26,7 +26,7 @@ interface CatsStateProps {
   gender: string;
   breed: string;
   cuteness: number;
-  meals: string;
+  meals: string[];
   image: string | ArrayBuffer;
   isNameEmpty: boolean;
   isValid: boolean;
@@ -66,7 +66,7 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
       gender: '',
       breed: '',
       cuteness: 50,
-      meals: '',
+      meals: [],
       image: catImage,
       isNameEmpty: true,
       isValid: false,
@@ -112,7 +112,7 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
         description: `Date of birth: ${this.inputDateRef.current?.value}` || '',
         gender: this.state.gender,
         cuteness: this.state.cuteness,
-        meals: this.state.meals,
+        meals: this.state.meals.join(', '),
         image: `${this.state.image}`,
       });
 
@@ -125,11 +125,10 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
       this.inputMeatRef.current!.checked = false;
       this.inputMilkRef.current!.checked = false;
       this.inputFileRef.current!.value = '';
-      this.inputCheckboxesRef.current!.clearState();
       this.setState(() => ({
         gender: '',
         cuteness: 50,
-        meals: '',
+        meals: [],
         isNameEmpty: true,
         isValid: false,
         isSubmitted: false,
@@ -197,10 +196,19 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
     this.checkValidity();
   };
 
-  handleCheckboxChange = (value: string[]) => {
-    this.setState(() => ({
-      meals: value.join(', '),
-    }));
+  handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { id } = e.target;
+    if (e.target.checked) {
+      this.setState((prevState) => ({
+        meals: [...prevState.meals, id],
+      }));
+    } else {
+      this.setState((prevState) => ({
+        meals: prevState.meals.filter((v: string) => v !== id),
+      }));
+    }
+    console.log(this.state.meals);
+
     this.checkValidity();
   };
 
