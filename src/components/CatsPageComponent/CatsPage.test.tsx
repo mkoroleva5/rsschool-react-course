@@ -16,23 +16,20 @@ const cat = {
   image: '',
 };
 
-const mockAlert = vi.spyOn(window, 'alert').mockImplementation(() => {});
-
 describe('CatsPage tests', () => {
   beforeEach(() => {
     vi.stubGlobal('localStorage', new LocalStorageMock());
-    vi.stubGlobal('alert', mockAlert);
   });
 
   afterAll(() => {
     vi.unstubAllGlobals();
-    mockAlert.mockRestore();
   });
 
   it('adds a new cat when form is submitted', async () => {
     window.localStorage.setItem('cats-list', JSON.stringify([]));
     render(<CatsPage />);
     const form = screen.getByTestId('form');
+    const inputText = screen.getByRole('textbox') as HTMLInputElement;
     const inputSelect = screen.getByRole('combobox') as HTMLSelectElement;
     const option = screen.getByRole('option', { name: 'Persian' });
     const inputDate = screen.getByLabelText('Date of birth') as HTMLInputElement;
