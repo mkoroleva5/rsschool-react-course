@@ -207,8 +207,6 @@ export class CatsPage extends React.Component<Record<string, never>, CatsStatePr
         meals: prevState.meals.filter((v: string) => v !== id),
       }));
     }
-    console.log(this.state.meals);
-
     this.checkValidity();
   };
 

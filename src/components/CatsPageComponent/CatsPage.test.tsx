@@ -29,6 +29,7 @@ describe('CatsPage tests', () => {
     window.localStorage.setItem('cats-list', JSON.stringify([]));
     render(<CatsPage />);
     const form = screen.getByTestId('form');
+    const inputText = screen.getByRole('textbox') as HTMLInputElement;
     const inputSelect = screen.getByRole('combobox') as HTMLSelectElement;
     const option = screen.getByRole('option', { name: 'Persian' });
     const inputDate = screen.getByLabelText('Date of birth') as HTMLInputElement;
@@ -49,6 +50,9 @@ describe('CatsPage tests', () => {
 
     const tooltip = screen.getByText(/enter a name/i);
     expect(tooltip).toBeInTheDocument();
+
+    await userEvent.type(inputText, 'Cat');
+    expect(tooltip).not.toBeInTheDocument();
   });
 
   it('deletes data from localStorage when delete button is clicked', async () => {
@@ -98,8 +102,14 @@ describe('CatsPage tests', () => {
     const input = screen.getByRole('textbox') as HTMLInputElement;
 
     expect(input).toHaveClass('empty');
-    await userEvent.type(input, 'Cat');
+
+    await userEvent.type(input, 'C');
+    expect(input).toHaveClass('invalid');
     expect(input).not.toHaveClass('empty');
+
+    await userEvent.type(input, 'at');
+    expect(input).not.toHaveClass('empty');
+    expect(input).not.toHaveClass('invalid');
   });
 
   it('displays a tooltip if text input is invalid', async () => {
