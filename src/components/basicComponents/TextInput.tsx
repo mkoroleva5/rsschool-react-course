@@ -40,7 +40,7 @@ export const TextInput = ({ label, register, errors }: TextInputProps) => {
         {...register(label, {
           required: 'Enter a name',
           pattern: {
-            value: /^[A-ZА-Я]/,
+            value: /^[A-ZА-Я][a-zA-Zа-яА-Я]/,
             message:
               'The name must start with a capital letter and be between 3 and 12 characters long',
           },
