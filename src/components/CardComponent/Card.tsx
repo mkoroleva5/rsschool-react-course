@@ -4,7 +4,7 @@ import noImage from '../../assets/images/default.jpg';
 import { Rating } from '../../components/basicComponents/Rating';
 import trashIcon from '../../assets/icons/trash.svg';
 
-interface CardProps {
+export interface CardProps {
   id: number;
   name: string;
   description: string;

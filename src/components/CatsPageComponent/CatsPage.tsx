@@ -1,319 +1,143 @@
-import React, { ChangeEvent } from 'react';
+import { useEffect, useState } from 'react';
+import { FieldValues, useForm } from 'react-hook-form';
 import './CatsPage.css';
-import { Card } from '../../components/CardComponent/Card';
+import { Card, CardProps } from '../CardComponent/Card';
 import catImage from '../../assets/images/cat.jpg';
-import { TextInput } from '../../components/basicComponents/TextInput';
-import { SelectInput } from '../../components/basicComponents/SelectInput';
-import { DateInput } from '../../components/basicComponents/DateInput';
-import { RadioInput } from '../../components/basicComponents/RadioInput';
-import { RangeInput } from '../../components/basicComponents/RangeInput';
-import { FileInput } from '../../components/basicComponents/FileInput';
-import { CheckboxInput } from '../../components/basicComponents/CheckboxInput';
+import { TextInput } from '../basicComponents/TextInput';
+import { SelectInput } from '../basicComponents/SelectInput';
+import { DateInput } from '../basicComponents/DateInput';
+import { RadioInput } from '../basicComponents/RadioInput';
+import { RangeInput } from '../basicComponents/RangeInput';
+import { FileInput } from '../basicComponents/FileInput';
+import { CheckboxInput } from '../basicComponents/CheckboxInput';
+import { Popup } from '../basicComponents/Popup';
 
-interface CatProps {
-  id: number;
+interface FormStateProps {
+  cats: CardProps[];
+  imageSrc: string | ArrayBuffer;
+}
+
+export interface IFormValues {
   name: string;
   breed: string;
-  description: string;
-  gender: string;
+  date: string;
+  gender: string | null;
   cuteness: number;
-  meals?: string;
-  image: string;
+  fish: boolean;
+  meat: boolean;
+  milk: boolean;
+  file: string | ArrayBuffer;
 }
 
-interface CatsStateProps {
-  cats: CatProps[];
-  gender: string;
-  breed: string;
-  cuteness: number;
-  meals: string[];
-  image: string | ArrayBuffer;
-  isNameEmpty: boolean;
-  isValid: boolean;
-  isSubmitted: boolean;
-  isCreated: boolean;
-}
+export const CatsPage = () => {
+  const {
+    register,
+    watch,
+    getValues,
+    formState: { errors, isSubmitSuccessful },
+    handleSubmit,
+    reset,
+  } = useForm({ mode: 'onBlur' });
 
-export class CatsPage extends React.Component<Record<string, never>, CatsStateProps> {
-  inputNameRef = React.createRef<HTMLInputElement>();
-  inputSelectRef = React.createRef<HTMLSelectElement>();
-  inputDateRef = React.createRef<HTMLInputElement>();
-  inputMaleRef = React.createRef<HTMLInputElement>();
-  inputFemaleRef = React.createRef<HTMLInputElement>();
-  inputCutenessRef = React.createRef<HTMLInputElement>();
-  inputCheckboxesRef = React.createRef<CheckboxInput>();
-  inputFishRef = React.createRef<HTMLInputElement>();
-  inputMeatRef = React.createRef<HTMLInputElement>();
-  inputMilkRef = React.createRef<HTMLInputElement>();
-  inputFileRef = React.createRef<HTMLInputElement>();
+  const getCatsList = () => {
+    const catsList = localStorage.getItem('cats-list');
 
-  constructor(props: Record<string, never>) {
-    super(props);
-
-    const getCatsList = () => {
-      const catsList = localStorage.getItem('cats-list');
-
-      try {
-        return catsList ? (JSON.parse(catsList) as CatProps[]) : [];
-      } catch (err) {
-        localStorage.removeItem('cats-list');
-        return [];
-      }
-    };
-
-    this.state = {
-      cats: getCatsList(),
-      gender: '',
-      breed: '',
-      cuteness: 50,
-      meals: [],
-      image: catImage,
-      isNameEmpty: true,
-      isValid: false,
-      isSubmitted: false,
-      isCreated: false,
-    };
-  }
-
-  checkValidity() {
-    if (
-      !this.inputNameRef.current?.value ||
-      !this.inputSelectRef.current?.value ||
-      !this.inputDateRef.current?.value ||
-      (this.inputMaleRef.current!.checked === false &&
-        this.inputFemaleRef.current!.checked === false) ||
-      (this.inputFishRef.current!.checked === false &&
-        this.inputMeatRef.current!.checked === false &&
-        this.inputMilkRef.current!.checked === false) ||
-      !this.inputFileRef.current?.value
-    ) {
-      this.setState(() => ({
-        isValid: false,
-      }));
-    } else {
-      this.setState(() => ({
-        isValid: true,
-      }));
+    try {
+      return catsList ? (JSON.parse(catsList) as CardProps[]) : [];
+    } catch (err) {
+      localStorage.removeItem('cats-list');
+      return [];
     }
-  }
+  };
 
-  handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const [isCreated, setIsCreated] = useState(false);
+  const [state, setState] = useState<FormStateProps>({
+    cats: getCatsList(),
+    imageSrc: '',
+  });
 
-    this.setState(() => ({
-      isSubmitted: true,
-    }));
+  useEffect(() => {
+    localStorage.setItem('cats-list', JSON.stringify(state.cats));
+  }, [state]);
 
-    if (this.state.isValid === true) {
-      this.addCat({
-        id: this.state.cats.length ? this.state.cats[this.state.cats.length - 1].id + 1 : 1,
-        name: this.inputNameRef.current?.value || '',
-        breed: this.state.breed,
-        description: `Date of birth: ${this.inputDateRef.current?.value}` || '',
-        gender: this.state.gender,
-        cuteness: this.state.cuteness,
-        meals: this.state.meals.join(', '),
-        image: `${this.state.image}`,
-      });
+  const addCat = (cat: CardProps) => {
+    setState({ ...state, cats: [...state.cats, cat] });
+    localStorage.setItem('cats-list', JSON.stringify(state.cats));
+  };
 
-      this.inputNameRef.current!.value = '';
-      this.inputSelectRef.current!.value = '';
-      this.inputDateRef.current!.value = '';
-      this.inputMaleRef.current!.checked = false;
-      this.inputFemaleRef.current!.checked = false;
-      this.inputFishRef.current!.checked = false;
-      this.inputMeatRef.current!.checked = false;
-      this.inputMilkRef.current!.checked = false;
-      this.inputFileRef.current!.value = '';
-      this.setState(() => ({
-        gender: '',
-        cuteness: 50,
-        meals: [],
-        isNameEmpty: true,
-        isValid: false,
-        isSubmitted: false,
-        isCreated: true,
-      }));
-    }
-  }
+  const onSubmit = (data: FieldValues) => {
+    console.log(data);
+    setIsCreated(true);
 
-  addCat(cat: CatProps) {
-    this.setState((prevState: CatsStateProps) => ({
-      cats: [...prevState.cats, cat],
-    }));
-    localStorage.setItem('cats-list', JSON.stringify(this.state.cats));
-  }
+    const meals = [];
+    data.fish !== false && meals.push(data.fish);
+    data.meat !== false && meals.push(data.meat);
+    data.milk !== false && meals.push(data.milk);
+    console.log(meals);
 
-  componentDidMount(): void {
-    window.addEventListener('beforeunload', () => {
-      localStorage.setItem('cats-list', JSON.stringify(this.state.cats));
+    addCat({
+      id: state.cats.length ? state.cats[state.cats.length - 1].id + 1 : 1,
+      name: data.name || '',
+      breed: data.breed,
+      description: `Date of birth: ${data.date.split('-').reverse().join('.')}` || '',
+      gender: data.gender,
+      cuteness: data.cuteness,
+      meals: meals.join(', '),
+      image: state.imageSrc ? `${state.imageSrc}` : catImage,
     });
-  }
-
-  componentWillUnmount(): void {
-    window.removeEventListener('beforeunload', () => {
-      localStorage.setItem('cats-list', JSON.stringify(this.state.cats));
-    });
-    localStorage.setItem('cats-list', JSON.stringify(this.state.cats));
-  }
-
-  handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    if (value) {
-      this.setState(() => ({
-        isNameEmpty: false,
-      }));
-    } else {
-      this.setState(() => ({
-        isNameEmpty: true,
-      }));
-    }
-    this.checkValidity();
+    reset();
   };
 
-  handleBreedChange = (option: string) => {
-    this.setState(() => ({
-      breed: option,
-    }));
-    this.checkValidity();
+  const handleUpload = (value: string | ArrayBuffer) => {
+    setState({ ...state, imageSrc: value });
   };
 
-  handleDateChange = () => {
-    this.checkValidity();
+  const handleClose = () => {
+    setIsCreated(false);
   };
 
-  handleGenderChange = (gender: string) => {
-    this.setState(() => ({
-      gender,
-    }));
-    this.checkValidity();
+  const handleDelete = (id: number) => {
+    const deletedCatIndex = state.cats.findIndex((el) => el.id === id);
+    setState({ ...state, cats: state.cats.filter((_, i) => i !== deletedCatIndex) });
+    localStorage.setItem('cats-list', JSON.stringify(state.cats));
   };
 
-  handleCutenessChange = (value: string) => {
-    this.setState(() => ({
-      cuteness: Number(value),
-    }));
-    this.checkValidity();
-  };
-
-  handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { id } = e.target;
-    if (e.target.checked) {
-      this.setState((prevState) => ({
-        meals: [...prevState.meals, id],
-      }));
-    } else {
-      this.setState((prevState) => ({
-        meals: prevState.meals.filter((v: string) => v !== id),
-      }));
-    }
-    this.checkValidity();
-  };
-
-  handleImageUpload = (value: string | ArrayBuffer) => {
-    if (value) {
-      this.setState(() => ({
-        image: value,
-      }));
-    }
-    this.checkValidity();
-  };
-
-  handleDelete = (id: number) => {
-    const deletedCatIndex = this.state.cats.findIndex((el) => el.id === id);
-    this.setState((prevState: CatsStateProps) => ({
-      cats: prevState.cats.filter((_, i) => i !== deletedCatIndex),
-    }));
-    localStorage.setItem('cats-list', JSON.stringify(this.state.cats));
-  };
-
-  render() {
-    return (
-      <div className="cats__wrapper">
-        {this.state.isCreated && (
-          <button
-            type="button"
-            className="popup__wrapper"
-            onClick={(e) => {
-              if (e.target === e.currentTarget) {
-                this.setState(() => ({
-                  isCreated: false,
-                }));
-              }
-            }}
-          >
-            <div className="popup__content">The cat has been created!</div>
-          </button>
-        )}
-        <section className="cats__form_wrapper">
-          <h1>Create your own cat</h1>
-          <form
-            data-testid="form"
-            className="cats__form"
-            onSubmit={(e) => {
-              this.handleSubmit(e);
-            }}
-          >
-            <TextInput
-              isSubmitted={this.state.isSubmitted}
-              isNameEmpty={this.state.isNameEmpty}
-              inputRef={this.inputNameRef}
-              onInputChange={this.handleNameChange}
+  return (
+    <div className="cats__wrapper">
+      {isCreated && <Popup onClick={handleClose} />}
+      <section className="cats__form_wrapper">
+        <h1>Create your own cat</h1>
+        <form className="cats__form" onSubmit={handleSubmit(onSubmit)}>
+          <TextInput label="name" register={register} errors={errors} />
+          <SelectInput label="breed" register={register} errors={errors} />
+          <DateInput label="date" register={register} errors={errors} />
+          <RadioInput label="gender" register={register} watch={watch} errors={errors} />
+          <RangeInput label="cuteness" register={register} onSubmitSuccess={isSubmitSuccessful} />
+          <CheckboxInput
+            getValues={getValues}
+            label1="fish"
+            label2="meat"
+            label3="milk"
+            register={register}
+            errors={errors}
+          />
+          <FileInput label="file" register={register} errors={errors} onUpload={handleUpload} />
+          <input className="cats__form_submit" type="submit" value="Create" />
+        </form>
+      </section>
+      <section className="cats__list_wrapper">
+        {state.cats.map((cat: CardProps) => {
+          return (
+            <Card
+              key={`${cat.name}-${cat.id}`}
+              {...cat}
+              showFavourites={false}
+              isRemovable={true}
+              onDelete={handleDelete}
             />
-            <SelectInput
-              isSubmitted={this.state.isSubmitted}
-              inputRef={this.inputSelectRef}
-              onInputChange={this.handleBreedChange}
-            />
-            <DateInput
-              isSubmitted={this.state.isSubmitted}
-              inputRef={this.inputDateRef}
-              onInputChange={this.handleDateChange}
-            />
-            <RadioInput
-              isSubmitted={this.state.isSubmitted}
-              inputMaleRef={this.inputMaleRef}
-              inputFemaleRef={this.inputFemaleRef}
-              gender={this.state.gender}
-              onInputChange={this.handleGenderChange}
-            />
-            <RangeInput
-              cuteness={this.state.cuteness}
-              inputRef={this.inputCutenessRef}
-              onInputChange={this.handleCutenessChange}
-            />
-            <CheckboxInput
-              ref={this.inputCheckboxesRef}
-              isSubmitted={this.state.isSubmitted}
-              inputFishRef={this.inputFishRef}
-              inputMeatRef={this.inputMeatRef}
-              inputMilkRef={this.inputMilkRef}
-              onInputChange={this.handleCheckboxChange}
-            />
-            <FileInput
-              isSubmitted={this.state.isSubmitted}
-              inputRef={this.inputFileRef}
-              onInputChange={this.handleImageUpload}
-            />
-            <button className="cats__form_submit" type="submit">
-              Create
-            </button>
-          </form>
-        </section>
-        <section className="cats__list_wrapper">
-          {this.state.cats.map((cat: CatProps) => {
-            return (
-              <Card
-                key={`${cat.name}-${cat.id}`}
-                {...cat}
-                showFavourites={false}
-                isRemovable={true}
-                onDelete={this.handleDelete}
-              />
-            );
-          })}
-        </section>
-      </div>
-    );
-  }
-}
+          );
+        })}
+      </section>
+    </div>
+  );
+};
