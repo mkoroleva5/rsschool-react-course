@@ -1,36 +1,49 @@
-import React from 'react';
+import { ChangeEvent, useState } from 'react';
+import { FieldErrors, FieldValues, Path, UseFormRegister } from 'react-hook-form';
+import { IFormValues } from '../CatsPageComponent/CatsPage';
 import './DateInput.css';
 import { Tooltip } from './Tooltip';
 
 interface DateInputProps {
-  isSubmitted: boolean;
-  inputRef: React.RefObject<HTMLInputElement>;
-  onInputChange: () => void;
+  label: Path<IFormValues>;
+  register: UseFormRegister<FieldValues>;
+  errors: FieldErrors<FieldValues>;
 }
 
-export class DateInput extends React.Component<DateInputProps> {
-  currentDate = new Date().toISOString().split('T')[0];
+export const DateInput = ({ label, register, errors }: DateInputProps) => {
+  const currentDate = new Date().toISOString().split('T')[0];
+  const [isValid, setIsValid] = useState(true);
 
-  render() {
-    return (
-      <div className="form__date">
-        <label className="form__date-label" htmlFor="date">
-          Date of birth
-        </label>
-        <input
-          className={`form__date-input ${!this.props.inputRef.current?.value ? 'invalid' : ''}`}
-          type="date"
-          id="date"
-          max={this.currentDate}
-          ref={this.props.inputRef}
-          onChange={() => {
-            this.props.onInputChange();
-          }}
-        ></input>
-        {this.props.isSubmitted && !this.props.inputRef.current?.value && (
-          <Tooltip message="Enter a date of birth" />
-        )}
-      </div>
-    );
-  }
-}
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    if (!value || value > currentDate) {
+      setIsValid(false);
+    } else {
+      setIsValid(true);
+    }
+  };
+
+  return (
+    <div className="form__date">
+      <label className="form__date-label" htmlFor="date">
+        date of birth
+      </label>
+      <input
+        className={`form__date-input ${!isValid ? 'invalid' : ''}`}
+        type="date"
+        id="date"
+        {...register(label, {
+          required: 'Enter a date of birth',
+          max: {
+            value: currentDate,
+            message: `Max value must be ${currentDate.split('-').reverse().join('.')}`,
+          },
+        })}
+        onChange={(e) => {
+          handleChange(e);
+        }}
+      ></input>
+      {errors?.date && <Tooltip message={errors?.date?.message || 'Error'} />}
+    </div>
+  );
+};

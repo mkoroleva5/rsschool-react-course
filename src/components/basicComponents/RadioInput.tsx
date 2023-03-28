@@ -1,61 +1,57 @@
-import React from 'react';
+import { FieldErrors, FieldValues, Path, UseFormRegister, WatchInternal } from 'react-hook-form';
+import { IFormValues } from '../CatsPageComponent/CatsPage';
 import './RadioInput.css';
 import { Tooltip } from './Tooltip';
 
 interface RadioInputProps {
-  isSubmitted: boolean;
-  inputMaleRef: React.RefObject<HTMLInputElement>;
-  inputFemaleRef: React.RefObject<HTMLInputElement>;
-  gender: string;
-  onInputChange: (value: string) => void;
+  label: Path<IFormValues>;
+  register: UseFormRegister<FieldValues>;
+  watch: WatchInternal<FieldValues>;
+  errors: FieldErrors<FieldValues>;
 }
 
-export class RadioInput extends React.Component<RadioInputProps> {
-  render() {
-    return (
-      <div className="form__gender_wrapper">
-        <div className="form__gender">
-          <input
-            className="form__gender_input"
-            type="radio"
-            id="male"
-            name="gender"
-            ref={this.props.inputMaleRef}
-            onChange={() => {
-              this.props.onInputChange('M');
-            }}
-          ></input>
-          <label
-            className={`form__gender_label ${this.props.gender === 'M' ? 'active-gender' : ''}`}
-            htmlFor="male"
-          >
-            Male
-          </label>
-        </div>
-        <div className="form__gender">
-          <input
-            className="form__gender_input"
-            type="radio"
-            id="female"
-            name="gender"
-            ref={this.props.inputFemaleRef}
-            onChange={() => {
-              this.props.onInputChange('F');
-            }}
-          ></input>
-          <label
-            className={`form__gender_label ${this.props.gender === 'F' ? 'active-gender' : ''}`}
-            htmlFor="female"
-          >
-            Female
-          </label>
-        </div>
-        {this.props.isSubmitted &&
-          this.props.inputMaleRef.current?.checked === false &&
-          this.props.inputFemaleRef.current?.checked === false && (
-            <Tooltip className="gender-error" message="Select a gender" />
-          )}
+export const RadioInput = ({ label, register, watch, errors }: RadioInputProps) => {
+  const currentGender = watch('gender');
+
+  return (
+    <div className="form__gender_wrapper">
+      <div className="form__gender">
+        <input
+          className="form__gender_input"
+          type="radio"
+          id="male"
+          value="M"
+          {...register(label, {
+            required: 'Select a gender',
+          })}
+        ></input>
+        <label
+          className={`form__gender_label ${currentGender === 'M' ? 'active-gender' : ''}`}
+          htmlFor="male"
+        >
+          male
+        </label>
       </div>
-    );
-  }
-}
+      <div className="form__gender">
+        <input
+          className="form__gender_input"
+          type="radio"
+          id="female"
+          value="F"
+          {...register(label, {
+            required: 'Select a gender',
+          })}
+        ></input>
+        <label
+          className={`form__gender_label ${currentGender === 'F' ? 'active-gender' : ''}`}
+          htmlFor="female"
+        >
+          female
+        </label>
+      </div>
+      {errors?.gender && (
+        <Tooltip className="gender-error" message={errors?.gender?.message || 'Error'} />
+      )}
+    </div>
+  );
+};

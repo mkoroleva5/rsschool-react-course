@@ -6,20 +6,13 @@
 
 .form__checkbox_title {
   font-size: 0.9rem;
+  margin-bottom: 0.5rem;
 }
 
 .form__checkbox_options {
   display: flex;
   align-items: center;
   gap: 1rem;
-}
-
-.option {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 5px 0;
 }
 
 .form__checkbox_input {
@@ -64,19 +57,19 @@
   transition-delay: 0.15s;
 }
 
-.form__checkbox_input:checked ~ .form__checkbox_label > .checkbox {
+.form__checkbox_input:checked ~ .checkbox {
   border-color: transparent;
   background: #b9dc84;
   animation: jelly 0.6s ease;
 }
 
-.form__checkbox_input:checked ~ .form__checkbox_label > .checkbox:after {
+.form__checkbox_input:checked ~ .checkbox:after {
   opacity: 1;
   transform: rotate(45deg) scale(1);
 }
 
 .meals-error {
-  transform: translate(0.9rem, -0.5rem);
+  transform: translate(1rem, -0.5rem);
 }
 
 @keyframes jelly {

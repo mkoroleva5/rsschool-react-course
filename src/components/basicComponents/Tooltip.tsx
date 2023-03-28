@@ -1,17 +1,15 @@
-import React from 'react';
+import { FieldError, FieldErrorsImpl, FieldValues, Merge } from 'react-hook-form';
 import './Tooltip.css';
 
 interface TooltipProps {
   className?: string;
-  message: string;
+  message: string | FieldError | Merge<FieldError, FieldErrorsImpl<FieldValues>>;
 }
 
-export class Tooltip extends React.Component<TooltipProps> {
-  render() {
-    return (
-      <div className={`error ${this.props.className || ''}`}>
-        <div className="error-text">{this.props.message}</div>
-      </div>
-    );
-  }
-}
+export const Tooltip = ({ className, message }: TooltipProps) => {
+  return (
+    <div className={`error ${className || ''}`}>
+      <div className="error-text">{`${message}`}</div>
+    </div>
+  );
+};

@@ -1,55 +1,68 @@
-import React, { ChangeEvent } from 'react';
+import { IFormValues } from '../CatsPageComponent/CatsPage';
+import { ChangeEvent, useState } from 'react';
+import { FieldValues, UseFormRegister, Path, FieldErrors } from 'react-hook-form';
+
 import './TextInput.css';
 import { Tooltip } from './Tooltip';
 
 interface TextInputProps {
-  isSubmitted: boolean;
-  isNameEmpty: boolean;
-  inputRef: React.RefObject<HTMLInputElement>;
-  onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  label: Path<IFormValues>;
+  register: UseFormRegister<FieldValues>;
+  errors: FieldErrors<FieldValues>;
 }
 
-export class TextInput extends React.Component<TextInputProps> {
-  checkValidity() {
-    if (
-      this.props.inputRef.current!.value.length < 3 ||
-      this.props.inputRef.current!.value.length > 12
-    ) {
-      return false;
-    } else if (
-      this.props.inputRef.current!.value[0].toUpperCase() !== this.props.inputRef.current!.value[0]
-    ) {
-      return false;
+export const TextInput = ({ label, register, errors }: TextInputProps) => {
+  const [isEmpty, setIsEmpty] = useState(true);
+  const [isValid, setIsValid] = useState(true);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    if (value) {
+      setIsEmpty(false);
+      if (value.length < 3 || value.length > 12) {
+        setIsValid(false);
+      } else if (value[0].toUpperCase() !== value[0]) {
+        setIsValid(false);
+      } else {
+        setIsValid(true);
+      }
     } else {
-      return true;
+      setIsEmpty(true);
+      setIsValid(false);
     }
-  }
+  };
 
-  render() {
-    return (
-      <div className="form__text">
-        <input
-          className={`form__input ${this.props.isNameEmpty ? 'empty' : ''} ${
-            this.props.inputRef.current?.value && !this.checkValidity() ? 'invalid' : ''
-          }`}
-          type="text"
-          title="The name must start with a capital letter and be between 3 and 12 characters long"
-          id="name"
-          ref={this.props.inputRef}
-          onChange={(e) => {
-            this.props.onInputChange(e);
-          }}
-        ></input>
-        <label className={`form__label ${this.props.isNameEmpty ? 'empty' : ''}`} htmlFor="name">
-          Name
-        </label>
-        {this.props.isSubmitted && !this.props.inputRef.current?.value && (
-          <Tooltip message="Enter a name" />
-        )}
-        {this.props.isSubmitted && this.props.inputRef.current?.value && !this.checkValidity() && (
-          <Tooltip message="The name must start with a capital letter and be between 3 and 12 characters long" />
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div className="form__text">
+      <input
+        id="name"
+        className={`form__input ${isEmpty ? 'empty' : ''} ${!isValid ? 'invalid' : ''}`}
+        {...register(label, {
+          required: 'Enter a name',
+          pattern: {
+            value: /^[A-ZА-Я]/,
+            message:
+              'The name must start with a capital letter and be between 3 and 12 characters long',
+          },
+          minLength: {
+            value: 3,
+            message:
+              'The name must start with a capital letter and be between 3 and 12 characters long',
+          },
+          maxLength: {
+            value: 12,
+            message:
+              'The name must start with a capital letter and be between 3 and 12 characters long',
+          },
+        })}
+        onChange={(e) => {
+          handleChange(e);
+        }}
+      />
+      <label className={`form__label ${isEmpty ? 'empty' : ''}`} htmlFor="name">
+        {label}
+      </label>
+      {errors?.name && <Tooltip message={errors?.name?.message || 'Error'} />}
+    </div>
+  );
+};

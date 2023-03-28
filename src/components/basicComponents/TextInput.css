@@ -33,13 +33,13 @@
   border-radius: 1rem;
 }
 
-.form__input:focus.invalid {
-  border: 2px solid #ff807a;
-}
-
 .form__input.empty,
 .form__input:not(:focus) {
   border: 2px solid rgb(200, 200, 200);
+}
+
+.form__input:focus.invalid {
+  border: 2px solid #ff807a;
 }
 
 .form__input:focus ~ .form__label,
