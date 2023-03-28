@@ -28,14 +28,14 @@ describe('CatsPage tests', () => {
   it('adds a new cat when form is submitted', async () => {
     window.localStorage.setItem('cats-list', JSON.stringify([]));
     render(<CatsPage />);
-    const form = screen.getByTestId('form');
+    const submitButton = screen.getByRole('button', { name: /create/i });
     const inputText = screen.getByRole('textbox') as HTMLInputElement;
     const inputSelect = screen.getByRole('combobox') as HTMLSelectElement;
     const option = screen.getByRole('option', { name: 'Persian' });
-    const inputDate = screen.getByLabelText('Date of birth') as HTMLInputElement;
+    const inputDate = screen.getByLabelText('date of birth') as HTMLInputElement;
     const date = new Date('2023-03-23').toISOString().slice(0, 10);
-    const inputMale = screen.getByRole('radio', { name: 'Male' });
-    const inputFish = screen.getByRole('checkbox', { name: 'Fish' });
+    const inputMale = screen.getByRole('radio', { name: 'male' });
+    const inputFish = screen.getByRole('checkbox', { name: 'fish' });
     const inputFile = screen.getByTestId('file-input') as HTMLInputElement;
     const file = new File(['test image content'], 'test-image.png', {
       type: 'image/png',
@@ -46,12 +46,13 @@ describe('CatsPage tests', () => {
     await userEvent.click(inputMale);
     await userEvent.click(inputFish);
     fireEvent.change(inputFile, { target: { files: [file] } });
-    fireEvent.submit(form);
+    await userEvent.click(submitButton);
 
     const tooltip = screen.getByText(/enter a name/i);
     expect(tooltip).toBeInTheDocument();
 
     await userEvent.type(inputText, 'Cat');
+    await userEvent.click(submitButton);
     expect(tooltip).not.toBeInTheDocument();
   });
 
@@ -72,8 +73,8 @@ describe('CatsPage tests', () => {
   });
 
   it('displays error when localStorage data is invalid', () => {
-    window.localStorage.setItem('cats-list', 'vbc');
     render(<CatsPage />);
+    window.localStorage.setItem('cats-list', 'abc');
     let parsedCatsList = null;
 
     try {
@@ -82,46 +83,10 @@ describe('CatsPage tests', () => {
         parsedCatsList = JSON.parse(catsList);
       }
     } catch (err) {
-      localStorage.removeItem('cats-list');
+      window.localStorage.setItem('cats-list', '');
     }
 
     expect(parsedCatsList).toBe(null);
-  });
-
-  it('displays a tooltip when form is sumbitted with invalid inputs', async () => {
-    render(<CatsPage />);
-    const form = screen.getByTestId('form');
-    fireEvent.submit(form);
-
-    const tooltip = screen.getByText(/enter a name/i);
-    expect(tooltip).toBeInTheDocument();
-  });
-
-  it('adds className empty if text input is empty', async () => {
-    render(<CatsPage />);
-    const input = screen.getByRole('textbox') as HTMLInputElement;
-
-    expect(input).toHaveClass('empty');
-
-    await userEvent.type(input, 'C');
-    expect(input).toHaveClass('invalid');
-    expect(input).not.toHaveClass('empty');
-
-    await userEvent.type(input, 'at');
-    expect(input).not.toHaveClass('empty');
-    expect(input).not.toHaveClass('invalid');
-  });
-
-  it('displays a tooltip if text input is invalid', async () => {
-    render(<CatsPage />);
-    const input = screen.getByRole('textbox') as HTMLInputElement;
-
-    await userEvent.type(input, 'cat');
-    fireEvent.submit(input);
-    const tooltip = screen.getByText(
-      /the name must start with a capital letter and be between 3 and 12 characters long/i
-    );
-    expect(tooltip).toBeInTheDocument();
   });
 
   it('deletes data from localStorage when delete button is clicked', async () => {
@@ -142,13 +107,46 @@ describe('CatsPage tests', () => {
     expect(catsListArray).toEqual([]);
   });
 
-  it('displays the right value in TextInput', async () => {
+  it('adds classNames empty/invalid if TextInput is empty/invalid', async () => {
     render(<CatsPage />);
     const input = screen.getByRole('textbox') as HTMLInputElement;
-    const value = 'test value';
+    const submitButton = screen.getByRole('button', { name: /create/i });
 
-    await userEvent.type(input, value);
-    expect(input).toHaveValue(value);
+    expect(input).toHaveClass('empty');
+
+    await userEvent.type(input, 'C');
+    expect(input).toHaveClass('invalid');
+    expect(input).not.toHaveClass('empty');
+
+    await userEvent.type(input, 'at');
+    expect(input).not.toHaveClass('empty');
+    expect(input).not.toHaveClass('invalid');
+
+    await userEvent.clear(input);
+    expect(input).toHaveClass('invalid');
+    expect(input).toHaveClass('empty');
+
+    await userEvent.click(submitButton);
+    const requiredError = screen.getByText(/enter a name/i);
+    expect(requiredError).toBeInTheDocument();
+  });
+
+  it('displays a tooltip if TextInput is invalid or empty', async () => {
+    render(<CatsPage />);
+    const input = screen.getByRole('textbox') as HTMLInputElement;
+    const submitButton = screen.getByRole('button', { name: /create/i });
+
+    await userEvent.type(input, 'cat');
+    await userEvent.click(submitButton);
+    const patternError = screen.getByText(
+      /the name must start with a capital letter and be between 3 and 12 characters long/i
+    );
+    expect(patternError).toBeInTheDocument();
+
+    await userEvent.clear(input);
+    await userEvent.click(submitButton);
+    const requiredError = screen.getByText(/enter a name/i);
+    expect(requiredError).toBeInTheDocument();
   });
 
   it('displays the right value in SelectInput', async () => {
@@ -161,20 +159,38 @@ describe('CatsPage tests', () => {
     expect(input).toHaveValue(value);
   });
 
+  it('add className invalid if SelectInput is empty', async () => {
+    render(<CatsPage />);
+    const input = screen.getByRole('combobox') as HTMLSelectElement;
+    const option = screen.getByRole('option', { name: 'Persian' });
+    const submitButton = screen.getByRole('button', { name: /create/i });
+
+    await userEvent.selectOptions(input, option);
+    await userEvent.click(submitButton);
+    expect(input).not.toHaveClass('invalid');
+
+    await userEvent.selectOptions(input, '');
+    expect(input).toHaveClass('invalid');
+  });
+
   it('displays the right value in DateInput', async () => {
     render(<CatsPage />);
-    const input = screen.getByLabelText('Date of birth') as HTMLInputElement;
+    const input = screen.getByLabelText('date of birth') as HTMLInputElement;
     const date = new Date('2023-03-23').toISOString().slice(0, 10);
 
     await userEvent.type(input, date);
     expect(input).toHaveValue(date);
+    expect(input).not.toHaveClass('invalid');
+
+    await userEvent.clear(input);
+    expect(input).toHaveClass('invalid');
   });
 
   it('displays the right value in RadioInput', async () => {
     render(<CatsPage />);
 
-    const inputMale = screen.getByRole('radio', { name: 'Male' });
-    const inputFemale = screen.getByRole('radio', { name: 'Female' });
+    const inputMale = screen.getByRole('radio', { name: 'male' });
+    const inputFemale = screen.getByRole('radio', { name: 'female' });
 
     expect(inputFemale).not.toBeChecked();
     expect(inputMale).not.toBeChecked();
@@ -188,7 +204,7 @@ describe('CatsPage tests', () => {
     expect(inputMale).toBeChecked();
   });
 
-  it('displays the right value in RangeInput', () => {
+  it('displays the right value in RangeInput', async () => {
     render(<CatsPage />);
     const input = screen.getByRole('slider') as HTMLInputElement;
 
@@ -200,9 +216,9 @@ describe('CatsPage tests', () => {
   it('displays the right value in CheckboxInput', async () => {
     render(<CatsPage />);
 
-    const inputFish = screen.getByRole('checkbox', { name: 'Fish' });
-    const inputMeat = screen.getByRole('checkbox', { name: 'Meat' });
-    const inputMilk = screen.getByRole('checkbox', { name: 'Milk' });
+    const inputFish = screen.getByRole('checkbox', { name: 'fish' });
+    const inputMeat = screen.getByRole('checkbox', { name: 'meat' });
+    const inputMilk = screen.getByRole('checkbox', { name: 'milk' });
 
     expect(inputFish).not.toBeChecked();
     expect(inputMeat).not.toBeChecked();

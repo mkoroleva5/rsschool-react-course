@@ -107,7 +107,7 @@ export const CatsPage = () => {
       {isCreated && <Popup onClick={handleClose} />}
       <section className="cats__form_wrapper">
         <h1>Create your own cat</h1>
-        <form className="cats__form" onSubmit={handleSubmit(onSubmit)}>
+        <form data-testid="form" className="cats__form" onSubmit={handleSubmit(onSubmit)}>
           <TextInput label="name" register={register} errors={errors} />
           <SelectInput label="breed" register={register} errors={errors} />
           <DateInput label="date" register={register} errors={errors} />

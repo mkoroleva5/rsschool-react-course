@@ -21,6 +21,7 @@ export const SearchBar = () => {
 
   return (
     <form
+      data-testid="search-form"
       className="search__wrapper"
       onSubmit={(e) => {
         e.preventDefault();
@@ -28,6 +29,7 @@ export const SearchBar = () => {
       }}
     >
       <input
+        data-testid="search-input"
         className="search__input"
         type="text"
         required={true}

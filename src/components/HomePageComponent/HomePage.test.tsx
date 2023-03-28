@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import { HomePage } from './HomePage';
 import '@testing-library/jest-dom';
@@ -23,7 +23,7 @@ describe('Cards wrapper tests', () => {
     const value = 'test value';
     render(<HomePage />);
 
-    const input = screen.getByRole('textbox') as HTMLInputElement;
+    const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, value);
     expect(input.value).toBe(value);
   });
@@ -33,14 +33,15 @@ describe('Cards wrapper tests', () => {
     const emptyString = '';
     render(<HomePage />);
 
-    const input = screen.getByRole('textbox') as HTMLInputElement;
-    const submitButton = screen.getByRole('button', { name: /search/i }) as HTMLButtonElement;
+    const input = screen.getByTestId('search-input') as HTMLInputElement;
+    const form = screen.getByTestId('search-form') as HTMLInputElement;
 
     await userEvent.type(input, value);
-    await userEvent.click(submitButton);
+    expect(window.localStorage.getItem('search-value')).toBe(value);
+    fireEvent.submit(form);
 
     expect(input.value).toBe(emptyString);
-    expect(window.localStorage.getItem('search-value')).toBe(value);
+    expect(window.localStorage.getItem('search-value')).toBe(null);
   });
 
   it('has favourite class when local storage is changed', () => {

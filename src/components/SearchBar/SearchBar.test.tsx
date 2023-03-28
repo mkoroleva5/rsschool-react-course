@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import { SearchBar } from './SearchBar';
 import '@testing-library/jest-dom';
@@ -28,13 +28,14 @@ describe('Search bar tests', () => {
     const emptyString = '';
     render(<SearchBar />);
 
-    const input = screen.getByRole('textbox') as HTMLInputElement;
-    const submitButton = screen.getByRole('button', { name: /search/i }) as HTMLButtonElement;
+    const input = screen.getByTestId('search-input') as HTMLInputElement;
+    const form = screen.getByTestId('search-form') as HTMLInputElement;
 
     await userEvent.type(input, value);
-    await userEvent.click(submitButton);
+    expect(window.localStorage.getItem('search-value')).toBe(value);
+    fireEvent.submit(form);
 
     expect(input.value).toBe(emptyString);
-    expect(window.localStorage.getItem('search-value')).toBe(value);
+    expect(window.localStorage.getItem('search-value')).toBe(null);
   });
 });
