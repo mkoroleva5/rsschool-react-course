@@ -11,7 +11,7 @@ interface SelectInputProps {
 }
 
 export const SelectInput = ({ label, register, errors }: SelectInputProps) => {
-  const [isValid, setIsValid] = useState(true);
+  const [isValid, setIsValid] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;

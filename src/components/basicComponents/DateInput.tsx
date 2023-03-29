@@ -12,7 +12,7 @@ interface DateInputProps {
 
 export const DateInput = ({ label, register, errors }: DateInputProps) => {
   const currentDate = new Date().toISOString().split('T')[0];
-  const [isValid, setIsValid] = useState(true);
+  const [isValid, setIsValid] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
