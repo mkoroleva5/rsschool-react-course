@@ -25,6 +25,7 @@ export const TextInput = ({ label, register, errors, onSubmitSuccess }: TextInpu
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (value) {
+      setIsEmpty(false);
       if (value.length < 3 || value.length > 12) {
         setIsValid(false);
       } else if (value[0].toUpperCase() !== value[0]) {
