@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import './CatsPage.css';
-import { Card, CardProps } from '../CardComponent/Card';
 import catImage from '../../assets/images/cat.jpg';
+import { Card, CardProps } from '../CardComponent/Card';
 import { TextInput } from '../basicComponents/TextInput';
 import { SelectInput } from '../basicComponents/SelectInput';
 import { DateInput } from '../basicComponents/DateInput';
@@ -23,9 +23,7 @@ export interface IFormValues {
   date: string;
   gender: string | null;
   cuteness: number;
-  fish: boolean;
-  meat: boolean;
-  milk: boolean;
+  meals: string[];
   file: string | ArrayBuffer;
 }
 
@@ -33,7 +31,6 @@ export const CatsPage = () => {
   const {
     register,
     watch,
-    getValues,
     formState: { errors, isSubmitSuccessful },
     handleSubmit,
     reset,
@@ -66,15 +63,7 @@ export const CatsPage = () => {
   };
 
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
     setIsCreated(true);
-
-    const meals = [];
-    data.fish !== false && meals.push(data.fish);
-    data.meat !== false && meals.push(data.meat);
-    data.milk !== false && meals.push(data.milk);
-    console.log(meals);
-
     addCat({
       id: state.cats.length ? state.cats[state.cats.length - 1].id + 1 : 1,
       name: data.name || '',
@@ -82,7 +71,7 @@ export const CatsPage = () => {
       description: `Date of birth: ${data.date.split('-').reverse().join('.')}` || '',
       gender: data.gender,
       cuteness: data.cuteness,
-      meals: meals.join(', '),
+      meals: data.meals.join(', '),
       image: state.imageSrc ? `${state.imageSrc}` : catImage,
     });
     reset();
@@ -108,19 +97,17 @@ export const CatsPage = () => {
       <section className="cats__form_wrapper">
         <h1>Create your own cat</h1>
         <form data-testid="form" className="cats__form" onSubmit={handleSubmit(onSubmit)}>
-          <TextInput label="name" register={register} errors={errors} />
+          <TextInput
+            label="name"
+            register={register}
+            errors={errors}
+            onSubmitSuccess={isSubmitSuccessful}
+          />
           <SelectInput label="breed" register={register} errors={errors} />
           <DateInput label="date" register={register} errors={errors} />
           <RadioInput label="gender" register={register} watch={watch} errors={errors} />
           <RangeInput label="cuteness" register={register} onSubmitSuccess={isSubmitSuccessful} />
-          <CheckboxInput
-            getValues={getValues}
-            label1="fish"
-            label2="meat"
-            label3="milk"
-            register={register}
-            errors={errors}
-          />
+          <CheckboxInput label="meals" register={register} errors={errors} />
           <FileInput label="file" register={register} errors={errors} onUpload={handleUpload} />
           <input className="cats__form_submit" type="submit" value="Create" />
         </form>
