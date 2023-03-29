@@ -31,7 +31,8 @@ export const TextInput = ({ label, register, errors, onSubmitSuccess }: TextInpu
       } else if (value[0].toUpperCase() !== value[0]) {
         setIsValid(false);
       } else {
-        setIsValid(true);
+        const lettersRegex = /^[A-Za-z]+$/;
+        setIsValid(lettersRegex.test(value));
       }
     } else {
       setIsEmpty(true);
@@ -47,7 +48,7 @@ export const TextInput = ({ label, register, errors, onSubmitSuccess }: TextInpu
         {...register(label, {
           required: 'Enter a name',
           pattern: {
-            value: /^[A-ZА-Я][a-zA-Zа-яА-Я]/,
+            value: /^[A-ZА-Я][A-Za-zА-Яа-я]{2,11}$/,
             message:
               'The name must start with a capital letter and be between 3 and 12 characters long',
           },
