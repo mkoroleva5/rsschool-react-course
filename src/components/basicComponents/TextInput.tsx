@@ -1,5 +1,5 @@
 import { IFormValues } from '../CatsPageComponent/CatsPage';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { FieldValues, UseFormRegister, Path, FieldErrors } from 'react-hook-form';
 
 import './TextInput.css';
@@ -9,16 +9,22 @@ interface TextInputProps {
   label: Path<IFormValues>;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
+  onSubmitSuccess: boolean;
 }
 
-export const TextInput = ({ label, register, errors }: TextInputProps) => {
+export const TextInput = ({ label, register, errors, onSubmitSuccess }: TextInputProps) => {
   const [isEmpty, setIsEmpty] = useState(true);
-  const [isValid, setIsValid] = useState(true);
+  const [isValid, setIsValid] = useState(false);
+
+  useEffect(() => {
+    if (onSubmitSuccess) {
+      setIsEmpty(true);
+    }
+  }, [onSubmitSuccess]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     if (value) {
-      setIsEmpty(false);
       if (value.length < 3 || value.length > 12) {
         setIsValid(false);
       } else if (value[0].toUpperCase() !== value[0]) {
@@ -59,7 +65,7 @@ export const TextInput = ({ label, register, errors }: TextInputProps) => {
           handleChange(e);
         }}
       />
-      <label className={`form__label ${isEmpty ? 'empty' : ''}`} htmlFor="name">
+      <label className={`form__label ${isEmpty ? 'empty' : ''} `} htmlFor="name">
         {label}
       </label>
       {errors?.name && <Tooltip message={errors?.name?.message || 'Error'} />}
