@@ -1,0 +1,42 @@
+.progress-bar_wrapper {
+  position: absolute;
+  top: 11rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: appear 0.2s linear;
+}
+
+.progress-bar {
+  width: 15rem;
+  height: 0.5rem;
+  background-color: rgb(230, 230, 230);
+  border: 2px solid rgb(230, 230, 230);
+  border-radius: 0.5rem;
+}
+
+.progress-bar_inner {
+  height: 0.5rem;
+  background-color: rgb(103, 211, 103);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  animation: progress 0.6s linear;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes progress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
