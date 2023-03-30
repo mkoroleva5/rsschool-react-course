@@ -71,7 +71,7 @@ export const CatsPage = () => {
       description: `Date of birth: ${data.date.split('-').reverse().join('.')}` || '',
       gender: data.gender,
       cuteness: data.cuteness,
-      meals: data.meals.join(', '),
+      meals: `Favourite meals: ${data.meals.join(', ')}`,
       image: state.imageSrc ? `${state.imageSrc}` : catImage,
     });
     reset();
