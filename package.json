@@ -18,7 +18,8 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.8",
     "react-router-dom": "^6.9.0",
-    "sort-by": "^1.2.0"
+    "sort-by": "^1.2.0",
+    "unsplash-js": "^7.0.15"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.0.1",
