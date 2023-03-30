@@ -3,14 +3,15 @@ import './Card.css';
 import noImage from '../../assets/images/default.jpg';
 import { Rating } from '../../components/basicComponents/Rating';
 import trashIcon from '../../assets/icons/trash.svg';
+import { Spinner } from '../../components/basicComponents/Spinner';
 
 export interface CardProps {
   id: number;
   name: string;
   description: string;
-  breed: string;
-  gender: string;
-  cuteness: number;
+  breed?: string;
+  gender?: string;
+  cuteness?: number;
   meals?: string;
   image: string;
   showFavourites?: boolean;
@@ -44,6 +45,7 @@ export const Card = ({ ...props }: CardProps) => {
   };
 
   const [isFavourite, setIsFavourite] = useState(savedFavourite() || false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(cardName, `${isFavourite}`);
@@ -61,16 +63,23 @@ export const Card = ({ ...props }: CardProps) => {
         alt={name}
         className="card__image"
         draggable={false}
+        onLoad={() => {
+          setIsLoaded(true);
+        }}
+        style={!isLoaded ? { opacity: 0 } : { opacity: 1 }}
       />
+      {!isLoaded && <Spinner />}
       <div className="card__info">
         <h3 className="card__title">{name}</h3>
         <p className="card__breed">{breed}</p>
         <p className="card__text">{description}</p>
-        {meals && <p className="card__text">Favourite meals: {meals}</p>}
+        {meals && <p className="card__text">{meals}</p>}
         <p className="card__gender">{gender}</p>
-        <div className="card__rating">
-          <Rating size={35} cuteness={cuteness} />
-        </div>
+        {cuteness && (
+          <div className="card__rating">
+            <Rating size={35} cuteness={cuteness} />
+          </div>
+        )}
         {showFavourites && (
           <button
             data-testid={`star-button-${id}`}
