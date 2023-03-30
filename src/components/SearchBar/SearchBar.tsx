@@ -1,19 +1,16 @@
-import { ChangeEvent, useEffect, useState } from 'react';
 import './SearchBar.css';
 import searchIcon from '../../assets/icons/search.svg';
+import { useEffect, useState } from 'react';
 
-export const SearchBar = () => {
-  const savedSearchValue = localStorage.getItem('search-value');
-  const [searchValue, setSearchValue] = useState(savedSearchValue || '');
+export interface IFormValues {
+  search: string;
+}
+interface SearchBarProps {
+  onSubmit: (value: string) => void;
+}
 
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchValue(value);
-  };
-
-  const handleSearchSubmit = () => {
-    setSearchValue('');
-  };
+export const SearchBar = ({ onSubmit }: SearchBarProps) => {
+  const [searchValue, setSearchValue] = useState(localStorage.getItem('search-value') || '');
 
   useEffect(() => {
     localStorage.setItem('search-value', searchValue);
@@ -25,7 +22,8 @@ export const SearchBar = () => {
       className="search__wrapper"
       onSubmit={(e) => {
         e.preventDefault();
-        handleSearchSubmit();
+        onSubmit(searchValue);
+        setSearchValue('');
       }}
     >
       <input
@@ -33,10 +31,11 @@ export const SearchBar = () => {
         className="search__input"
         type="text"
         required={true}
-        autoComplete="off"
         value={searchValue}
+        autoComplete="off"
         onChange={(e) => {
-          handleSearchChange(e);
+          const { value } = e.target;
+          setSearchValue(value);
         }}
       />
       <label className="search__label">Search</label>

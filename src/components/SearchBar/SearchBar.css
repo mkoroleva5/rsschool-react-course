@@ -44,7 +44,7 @@
   border-color: var(--bg-color);
 }
 
-.search__button {
+.search__button_wrapper {
   position: absolute;
   top: 50%;
   right: -2rem;
@@ -54,4 +54,18 @@
   outline: none;
   background-color: var(--white-color);
   cursor: pointer;
+}
+
+.search__button {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  top: 0.5rem;
+  right: -2rem;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
 }
