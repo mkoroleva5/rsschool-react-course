@@ -12,27 +12,17 @@ export interface CardProps {
   breed?: string;
   gender?: string;
   cuteness?: number;
-  meals?: string;
+  info?: string;
   image: string;
   showFavourites?: boolean;
   isRemovable?: boolean;
+  onOpening?: (id: number) => void;
   onDelete?: (id: number) => void;
 }
 
 export const Card = ({ ...props }: CardProps) => {
-  const {
-    id,
-    name,
-    description,
-    breed,
-    meals,
-    gender,
-    cuteness,
-    image,
-    showFavourites,
-    isRemovable,
-    onDelete,
-  } = props;
+  const { id, name, gender, cuteness, image, showFavourites, isRemovable, onOpening, onDelete } =
+    props;
 
   const cardName = `card-${id}`;
   const savedFavourite = () => {
@@ -56,7 +46,17 @@ export const Card = ({ ...props }: CardProps) => {
   };
 
   return (
-    <div className="card__wrapper">
+    <div
+      className="card__wrapper"
+      onClick={() => {
+        if (onOpening) {
+          onOpening(id);
+        }
+      }}
+      onKeyDown={() => {}}
+      role="button"
+      tabIndex={0}
+    >
       <img
         data-testid={`image-${id}`}
         src={image || noImage}
@@ -71,56 +71,55 @@ export const Card = ({ ...props }: CardProps) => {
       {!isLoaded && <Spinner />}
       <div className="card__info">
         <h3 className="card__title">{name}</h3>
-        <p className="card__breed">{breed}</p>
-        <p className="card__text">{description}</p>
-        {meals && <p className="card__text">{meals}</p>}
-        <p className="card__gender">{gender}</p>
-        {cuteness && (
-          <div className="card__rating">
-            <Rating size={35} cuteness={cuteness} />
-          </div>
-        )}
-        {showFavourites && (
-          <button
-            data-testid={`star-button-${id}`}
-            type="button"
-            className="card__button"
-            onClick={() => {
-              handleClick();
-            }}
-          >
-            <svg
-              data-testid={`star-svg-${id}`}
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#dcdcdc"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={`card__button_icon ${isFavourite ? 'favourite' : ''}`}
-            >
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-            </svg>
-          </button>
-        )}
-        {isRemovable && (
-          <button
-            data-testid={`delete-button-${id}`}
-            type="button"
-            className="delete-button"
-            onClick={() => {
-              if (onDelete) {
-                onDelete(id);
-              }
-            }}
-          >
-            <img className="delete-button-icon" src={trashIcon} alt="Delete" />
-          </button>
-        )}
       </div>
+      <p className="card__gender">{gender}</p>
+      {cuteness && (
+        <div className="card__rating">
+          <Rating size={35} cuteness={cuteness} />
+        </div>
+      )}
+      {showFavourites && (
+        <button
+          data-testid={`star-button-${id}`}
+          type="button"
+          className="card__button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleClick();
+          }}
+        >
+          <svg
+            data-testid={`star-svg-${id}`}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#dcdcdc"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={`card__button_icon ${isFavourite ? 'favourite' : ''}`}
+          >
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+        </button>
+      )}
+      {isRemovable && (
+        <button
+          data-testid={`delete-button-${id}`}
+          type="button"
+          className="delete-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onDelete) {
+              onDelete(id);
+            }
+          }}
+        >
+          <img className="delete-button-icon" src={trashIcon} alt="Delete" />
+        </button>
+      )}
     </div>
   );
 };

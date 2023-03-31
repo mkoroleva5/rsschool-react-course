@@ -12,7 +12,7 @@ const cat = {
   description: 'Date of birth: 2023-03-04',
   gender: 'F',
   cuteness: 75,
-  meals: 'Fish',
+  info: 'Favourite meals: fish, milk',
   image: '',
 };
 

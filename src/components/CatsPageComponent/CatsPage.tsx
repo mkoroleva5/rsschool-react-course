@@ -11,6 +11,7 @@ import { RangeInput } from '../basicComponents/RangeInput';
 import { FileInput } from '../basicComponents/FileInput';
 import { CheckboxInput } from '../basicComponents/CheckboxInput';
 import { Popup } from '../basicComponents/Popup';
+import { Modal } from '../../components/basicComponents/Modal';
 
 interface FormStateProps {
   cats: CardProps[];
@@ -48,6 +49,7 @@ export const CatsPage = () => {
   };
 
   const [isCreated, setIsCreated] = useState(false);
+  const [openedId, setOpenedId] = useState<number | null>(null);
   const [state, setState] = useState<FormStateProps>({
     cats: getCatsList(),
     imageSrc: '',
@@ -71,7 +73,7 @@ export const CatsPage = () => {
       description: `Date of birth: ${data.date.split('-').reverse().join('.')}` || '',
       gender: data.gender,
       cuteness: data.cuteness,
-      meals: `Favourite meals: ${data.meals.join(', ')}`,
+      info: `Favourite meals: ${data.meals.join(', ')}`,
       image: state.imageSrc ? `${state.imageSrc}` : catImage,
     });
     reset();
@@ -79,6 +81,14 @@ export const CatsPage = () => {
 
   const handleUpload = (value: string | ArrayBuffer) => {
     setState({ ...state, imageSrc: value });
+  };
+
+  const handleOpening = (id: number) => {
+    setOpenedId(id);
+  };
+
+  const handleClosing = () => {
+    setOpenedId(null);
   };
 
   const handleClose = () => {
@@ -120,10 +130,12 @@ export const CatsPage = () => {
               {...cat}
               showFavourites={false}
               isRemovable={true}
+              onOpening={handleOpening}
               onDelete={handleDelete}
             />
           );
         })}
+        {openedId !== null && <Modal page={'cats'} id={openedId} onClose={handleClosing} />}
       </section>
     </div>
   );

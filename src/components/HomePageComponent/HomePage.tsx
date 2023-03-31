@@ -4,6 +4,7 @@ import { Card, CardProps } from '../../components/CardComponent/Card';
 import { useEffect, useState } from 'react';
 import { createApi } from 'unsplash-js';
 import { ProgressBar } from '../../components/basicComponents/ProgressBar';
+import { Modal } from '../../components/basicComponents/Modal';
 
 const unsplash = createApi({
   accessKey: 'E5bvAoy3CzFiyPKWtrefHM0hluG_543-BOZxiJ0XNfY',
@@ -28,6 +29,7 @@ export const HomePage = () => {
 
   const [isPending, setIsPending] = useState(false);
   const [isResult, setIsResult] = useState(true);
+  const [openedId, setOpenedId] = useState<number | null>(null);
   const [state, setState] = useState<StateProps>({
     searchValue: localStorage.getItem('search-value') || '',
     cards: getCardsList(),
@@ -55,23 +57,34 @@ export const HomePage = () => {
             return {
               id: index,
               name: query,
-              description:
-                item.user.instagram_username && `Instagram: ${item.user.instagram_username}`,
-              breed: `Author: ${item.user.name}`,
-              meals: `Published at ${item.created_at.slice(0, 10).split('-').reverse().join('.')}`,
+              description: item.user.instagram_username
+                ? `Instagram: @${item.user.instagram_username}`
+                : '',
+              breed: `Author: ${item.user.name} ${
+                item.user.location ? 'from ' + item.user.location : ''
+              }`,
+              info: `Published at ${item.created_at.slice(0, 10).split('-').reverse().join('.')}`,
               gender: `♥ ${item.likes}`,
-
               image: item.urls.regular,
             };
           });
           setState({ ...state, searchValue: '', cards: cardsArr });
         }
       })
+
       .catch((err) => {
         console.log(err);
         setIsResult(false);
         setIsPending(false);
       });
+  };
+
+  const handleOpening = (id: number) => {
+    setOpenedId(id);
+  };
+
+  const handleClosing = () => {
+    setOpenedId(null);
   };
 
   const handleDelete = (id: number) => {
@@ -98,11 +111,13 @@ export const HomePage = () => {
               {...item}
               showFavourites={false}
               isRemovable={true}
+              onOpening={handleOpening}
               onDelete={handleDelete}
             />
           );
         })}
       </div>
+      {openedId !== null && <Modal page={'cards'} id={openedId} onClose={handleClosing} />}
     </section>
   );
 };
