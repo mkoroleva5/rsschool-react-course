@@ -1,7 +1,7 @@
 import { FieldErrors, FieldValues, Path, UseFormRegister } from 'react-hook-form';
-import { IFormValues } from '../CatsPageComponent/CatsPage';
+import { IFormValues } from '../../CatsPageComponent/CatsPage';
 import './CheckboxInput.css';
-import { Tooltip } from './Tooltip';
+import { Tooltip } from '../Tooltip';
 
 interface CheckboxInputProps {
   label: Path<IFormValues>;

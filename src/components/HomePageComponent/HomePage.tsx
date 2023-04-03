@@ -3,8 +3,8 @@ import { SearchBar } from '../../components/SearchBar/SearchBar';
 import { Card, CardProps } from '../../components/CardComponent/Card';
 import { useEffect, useState } from 'react';
 import { createApi } from 'unsplash-js';
-import { ProgressBar } from '../../components/basicComponents/ProgressBar';
-import { Modal } from '../../components/basicComponents/Modal';
+import { ProgressBar } from '../BasicComponents/ProgressBar';
+import { Modal } from '../BasicComponents/Modal';
 
 const unsplash = createApi({
   accessKey: 'E5bvAoy3CzFiyPKWtrefHM0hluG_543-BOZxiJ0XNfY',

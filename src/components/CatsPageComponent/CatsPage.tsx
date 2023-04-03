@@ -3,15 +3,15 @@ import { FieldValues, useForm } from 'react-hook-form';
 import './CatsPage.css';
 import catImage from '../../assets/images/cat.jpg';
 import { Card, CardProps } from '../CardComponent/Card';
-import { TextInput } from '../basicComponents/TextInput';
-import { SelectInput } from '../basicComponents/SelectInput';
-import { DateInput } from '../basicComponents/DateInput';
-import { RadioInput } from '../basicComponents/RadioInput';
-import { RangeInput } from '../basicComponents/RangeInput';
-import { FileInput } from '../basicComponents/FileInput';
-import { CheckboxInput } from '../basicComponents/CheckboxInput';
-import { Popup } from '../basicComponents/Popup';
-import { Modal } from '../../components/basicComponents/Modal';
+import { TextInput } from '../BasicComponents/Inputs/TextInput';
+import { SelectInput } from '../BasicComponents/Inputs/SelectInput';
+import { DateInput } from '../BasicComponents/Inputs/DateInput';
+import { RadioInput } from '../BasicComponents/Inputs/RadioInput';
+import { RangeInput } from '../BasicComponents/Inputs/RangeInput';
+import { FileInput } from '../BasicComponents/Inputs/FileInput';
+import { CheckboxInput } from '../BasicComponents/Inputs/CheckboxInput';
+import { Popup } from '../BasicComponents/Popup';
+import { Modal } from '../BasicComponents/Modal';
 
 interface FormStateProps {
   cats: CardProps[];

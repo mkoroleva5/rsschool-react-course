@@ -1,7 +1,7 @@
 import { FieldErrors, FieldValues, Path, UseFormRegister } from 'react-hook-form';
-import { IFormValues } from '../CatsPageComponent/CatsPage';
+import { IFormValues } from '../../CatsPageComponent/CatsPage';
 import './FileInput.css';
-import { Tooltip } from './Tooltip';
+import { Tooltip } from '../Tooltip';
 
 interface FileInputProps {
   label: Path<IFormValues>;

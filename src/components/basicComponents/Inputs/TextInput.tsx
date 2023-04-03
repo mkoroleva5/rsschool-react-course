@@ -1,9 +1,9 @@
-import { IFormValues } from '../CatsPageComponent/CatsPage';
+import { IFormValues } from '../../CatsPageComponent/CatsPage';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { FieldValues, UseFormRegister, Path, FieldErrors } from 'react-hook-form';
 
 import './TextInput.css';
-import { Tooltip } from './Tooltip';
+import { Tooltip } from '../Tooltip';
 
 interface TextInputProps {
   label: Path<IFormValues>;

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import './Card.css';
 import noImage from '../../assets/images/default.jpg';
-import { Rating } from '../../components/basicComponents/Rating';
+import { Rating } from '../BasicComponents/Rating';
 import trashIcon from '../../assets/icons/trash.svg';
-import { Spinner } from '../../components/basicComponents/Spinner';
+import { Spinner } from '../BasicComponents/Spinner';
 
 export interface CardProps {
   id: number;

@@ -1,8 +1,8 @@
 import { ChangeEvent, useState } from 'react';
 import { FieldErrors, FieldValues, Path, UseFormRegister } from 'react-hook-form';
-import { IFormValues } from '../CatsPageComponent/CatsPage';
+import { IFormValues } from '../../CatsPageComponent/CatsPage';
 import './DateInput.css';
-import { Tooltip } from './Tooltip';
+import { Tooltip } from '../Tooltip';
 
 interface DateInputProps {
   label: Path<IFormValues>;

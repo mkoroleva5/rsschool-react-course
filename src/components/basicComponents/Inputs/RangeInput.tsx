@@ -1,8 +1,8 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { FieldValues, Path, UseFormRegister } from 'react-hook-form';
-import { IFormValues } from '../CatsPageComponent/CatsPage';
+import { IFormValues } from '../../CatsPageComponent/CatsPage';
 import './RangeInput.css';
-import { Rating } from './Rating';
+import { Rating } from '../Rating';
 
 interface RangeInputProps {
   label: Path<IFormValues>;
