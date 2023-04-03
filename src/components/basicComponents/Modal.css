@@ -18,6 +18,7 @@
 
 .modal__card {
   position: relative;
+  max-width: 42rem;
   width: 60%;
   height: 80%;
   display: flex;
