@@ -41,7 +41,7 @@ export const HomePage = () => {
           results.map((item, index) => {
             dispatch(
               addCard({
-                id: index,
+                id: index + 1,
                 name: query,
                 description: item.user.instagram_username
                   ? `Instagram: @${item.user.instagram_username}`
