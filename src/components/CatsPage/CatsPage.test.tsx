@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
@@ -25,6 +25,14 @@ describe('CatsPage tests', () => {
     vi.unstubAllGlobals();
   });
 
+  it('displays no cats when localStorage data is invalid', () => {
+    window.localStorage.setItem('cats-list', 'abc');
+    render(<CatsPage />);
+
+    const cats = screen.getByTestId('cats-wrapper');
+    expect(cats.childElementCount).toBe(0);
+  });
+
   it('adds a new cat when form is submitted', async () => {
     window.localStorage.setItem('cats-list', JSON.stringify([]));
     render(<CatsPage />);
@@ -37,15 +45,15 @@ describe('CatsPage tests', () => {
     const inputMale = screen.getByRole('radio', { name: 'male' });
     const inputFish = screen.getByRole('checkbox', { name: 'fish' });
     const inputFile = screen.getByTestId('file-input') as HTMLInputElement;
-    const file = new File(['test image content'], 'test-image.png', {
-      type: 'image/png',
+    const file = new File(['test image content'], 'test-image.jpg', {
+      type: 'image/jpeg',
     });
 
     await userEvent.selectOptions(inputSelect, option);
     await userEvent.type(inputDate, date);
     await userEvent.click(inputMale);
     await userEvent.click(inputFish);
-    fireEvent.change(inputFile, { target: { files: [file] } });
+    await waitFor(() => userEvent.upload(inputFile, file));
     await userEvent.click(submitButton);
 
     const tooltip = screen.getByText(/enter a name/i);
@@ -54,6 +62,15 @@ describe('CatsPage tests', () => {
     await userEvent.type(inputText, 'Cat');
     await userEvent.click(submitButton);
     expect(tooltip).not.toBeInTheDocument();
+
+    const card = await waitFor(() => screen.getByRole('img', { name: /cat/i }));
+    expect(card).toBeInTheDocument();
+
+    const modal = screen.getByRole('button', { name: /the cat has been created!/i });
+    expect(modal).toBeInTheDocument();
+
+    await userEvent.click(modal);
+    expect(modal).not.toBeInTheDocument();
   });
 
   it('shows card info in the modal window', async () => {

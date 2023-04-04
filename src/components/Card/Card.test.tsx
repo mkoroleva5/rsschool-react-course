@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
@@ -83,7 +83,9 @@ describe('Card tests', () => {
     render(<Card {...item} id={1} />);
 
     const image = screen.getByRole('img');
-    image.dispatchEvent(new Event('load'));
+    act(() => {
+      image.dispatchEvent(new Event('load'));
+    });
     expect(image).toBeInTheDocument();
   });
 
@@ -96,5 +98,10 @@ describe('Card tests', () => {
 
     await userEvent.click(card);
     expect(onOpeningMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('loads default image when no source', () => {
+    render(<Card {...item} image={''} />);
+    expect(screen.getByRole('img', { name: /tigger/i })).toHaveAttribute('src', noImage);
   });
 });

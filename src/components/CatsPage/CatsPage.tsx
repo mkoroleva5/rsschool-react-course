@@ -100,7 +100,7 @@ export const CatsPage = () => {
           <input className="cats__form_submit" type="submit" value="Create" />
         </form>
       </section>
-      <section className="cats__list_wrapper">
+      <section className="cats__list_wrapper" data-testid="cats-wrapper">
         {cats.map((cat: CardProps) => {
           return (
             <Card

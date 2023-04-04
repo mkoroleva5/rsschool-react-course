@@ -3,17 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addCard, clearCards, clearSearchValue } from '../../store/cardsSlice';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { Card, CardProps } from '../Card/Card';
-import { useEffect, useState } from 'react';
-import { createApi } from 'unsplash-js';
+import { useContext, useEffect, useState } from 'react';
 import { ProgressBar } from '../BasicComponents/ProgressBar';
 import { Modal } from '../BasicComponents/Modal';
 import { RootState } from '../../store';
-
-const unsplash = createApi({
-  accessKey: 'E5bvAoy3CzFiyPKWtrefHM0hluG_543-BOZxiJ0XNfY',
-});
+import { ApiContext } from '../../api/ApiContext';
 
 export const HomePage = () => {
+  const unsplashApi = useContext(ApiContext);
   const cards = useSelector((state: RootState) => state.cards.cards);
   const dispatch = useDispatch();
 
@@ -21,11 +18,11 @@ export const HomePage = () => {
   const [isResult, setIsResult] = useState(true);
   const [openedId, setOpenedId] = useState<number | null>(null);
 
-  const handleSubmit = async (query: string) => {
+  const handleSubmit = (query: string) => {
     setIsPending(true);
     setIsResult(true);
 
-    await unsplash.search
+    unsplashApi.search
       .getPhotos({
         query: query,
         orientation: 'landscape',
