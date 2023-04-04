@@ -3,11 +3,12 @@ import './Rating.css';
 interface RatingProps {
   cuteness: number;
   size: number;
+  testId?: string;
 }
 
-export const Rating = ({ cuteness, size }: RatingProps) => {
+export const Rating = ({ cuteness, size, testId }: RatingProps) => {
   return (
-    <div className="heart-ratings" style={{ fontSize: `${size}px` }}>
+    <div data-testid={testId} className="heart-ratings" style={{ fontSize: `${size}px` }}>
       <div className="fill-ratings" data-testid="rating" style={{ width: `${cuteness}%` }}>
         <span>♥♥♥♥♥</span>
       </div>

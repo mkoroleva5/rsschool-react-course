@@ -1,5 +1,9 @@
 import './Spinner.css';
 
-export const Spinner = () => {
-  return <div className="spinner" />;
+interface SpinnerProps {
+  testId?: string;
+}
+
+export const Spinner = ({ testId }: SpinnerProps) => {
+  return <div data-testid={testId} className="spinner" />;
 };

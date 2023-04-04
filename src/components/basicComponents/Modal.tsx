@@ -27,6 +27,7 @@ export const Modal = ({ page, id, onClose }: ModalProps) => {
 
   return (
     <div
+      data-testid={`modal-${id}`}
       className="modal__wrapper"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
@@ -39,6 +40,7 @@ export const Modal = ({ page, id, onClose }: ModalProps) => {
     >
       <div className="modal__card">
         <button
+          data-testid={`modal-close-button-${id}`}
           className="modal__close-button"
           onClick={() => {
             onClose();
@@ -54,7 +56,7 @@ export const Modal = ({ page, id, onClose }: ModalProps) => {
           }}
           style={!isLoaded ? { opacity: 0 } : { opacity: 1 }}
         />
-        {!isLoaded && <Spinner />}
+        {!isLoaded && <Spinner testId={`modal-spinner-${id}`} />}
         <div className="modal__info">
           <h3 className="modal__title">{card?.name}</h3>
           <p className="modal__breed">{card?.breed}</p>
@@ -64,7 +66,7 @@ export const Modal = ({ page, id, onClose }: ModalProps) => {
         </div>
         {card?.cuteness && (
           <div className="modal__rating">
-            <Rating size={35} cuteness={card?.cuteness} />
+            <Rating size={35} cuteness={card?.cuteness} testId={`modal-rating-${id}`} />
           </div>
         )}
       </div>

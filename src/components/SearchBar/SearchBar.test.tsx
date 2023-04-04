@@ -16,7 +16,7 @@ describe('Search bar tests', () => {
 
   it('updates search value when input changes', async () => {
     const value = 'test value';
-    render(<SearchBar />);
+    render(<SearchBar onSubmit={() => {}} />);
 
     const input = screen.getByRole('textbox') as HTMLInputElement;
     await userEvent.type(input, value);
@@ -26,16 +26,23 @@ describe('Search bar tests', () => {
   it('updates search value and saves it to localStorage when form is submitted', async () => {
     const value = 'test value';
     const emptyString = '';
-    render(<SearchBar />);
+    render(<SearchBar onSubmit={() => {}} />);
 
     const input = screen.getByTestId('search-input') as HTMLInputElement;
-    const form = screen.getByTestId('search-form') as HTMLInputElement;
-
     await userEvent.type(input, value);
     expect(window.localStorage.getItem('search-value')).toBe(value);
-    fireEvent.submit(form);
 
+    fireEvent.submit(input);
     expect(input.value).toBe(emptyString);
     expect(window.localStorage.getItem('search-value')).toBe(null);
+  });
+
+  it('calls a function on submit', async () => {
+    const onSubmitMock = vi.fn();
+    render(<SearchBar onSubmit={onSubmitMock} />);
+
+    const input = screen.getByTestId('search-input') as HTMLInputElement;
+    fireEvent.submit(input);
+    expect(onSubmitMock).toHaveBeenCalled();
   });
 });

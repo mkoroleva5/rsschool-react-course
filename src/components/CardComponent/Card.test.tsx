@@ -70,7 +70,7 @@ describe('Card tests', () => {
   it('changes class on click', async () => {
     const user = userEvent.setup();
     render(<Card {...item} showFavourites={true} />);
-    await user.click(screen.getByRole('button'));
+    await user.click(screen.getByTestId('star-button-1'));
     expect(screen.getByTestId('star-svg-1')).toHaveClass('favourite');
   });
 
@@ -124,5 +124,24 @@ describe('Card tests', () => {
     const newCatsList = window.localStorage.getItem('cats-list');
     const catsListArray = newCatsList ? JSON.parse(newCatsList) : null;
     expect(catsListArray).toEqual([]);
+  });
+
+  it('displays an image after loading', () => {
+    render(<Card {...item} id={1} />);
+
+    const image = screen.getByRole('img');
+    image.dispatchEvent(new Event('load'));
+    expect(image).toBeInTheDocument();
+  });
+
+  it('calls a function when card is clicked', async () => {
+    const onOpeningMock = vi.fn();
+    render(<Card {...item} id={1} onOpening={onOpeningMock} />);
+
+    const card = screen.getByRole('button', { name: /Tigger/i });
+    expect(card).toBeInTheDocument();
+
+    await userEvent.click(card);
+    expect(onOpeningMock).toHaveBeenCalledTimes(1);
   });
 });

@@ -56,14 +56,35 @@ describe('CatsPage tests', () => {
     expect(tooltip).not.toBeInTheDocument();
   });
 
-  it('deletes data from localStorage when delete button is clicked', async () => {
+  it('shows card info in the modal window', async () => {
     const cats = [cat];
     window.localStorage.setItem('cats-list', JSON.stringify(cats));
 
     render(<CatsPage />);
 
+    const card = screen.getByRole('button', { name: /cat/i });
+    await userEvent.click(card);
+
     const meals = screen.getByText(/favourite meals: fish/i);
     expect(meals).toBeInTheDocument();
+  });
+
+  it('closes the modal window on click outside of it', async () => {
+    const cats = [cat];
+    window.localStorage.setItem('cats-list', JSON.stringify(cats));
+
+    render(<CatsPage />);
+
+    const card = screen.getByRole('button', { name: /cat/i });
+    await userEvent.click(card);
+
+    const modal = screen.getByRole('button', {
+      name: /favourite meals: fish/i,
+    });
+    expect(modal).toBeInTheDocument();
+
+    await userEvent.click(modal);
+    expect(modal).not.toBeInTheDocument();
   });
 
   it('sets data to localStorage', () => {
@@ -256,5 +277,18 @@ describe('CatsPage tests', () => {
     fireEvent.change(input, { target: { files: [file] } });
 
     expect(input.files![0]).toStrictEqual(file);
+  });
+
+  it('', async () => {
+    const cats = [cat];
+    window.localStorage.setItem('cats-list', JSON.stringify(cats));
+
+    render(<CatsPage />);
+
+    const cards = screen.getAllByRole('button', { name: /cat/i });
+    await userEvent.click(cards[0]);
+
+    const rating = screen.getByTestId('modal-rating-1');
+    expect(rating).toBeInTheDocument();
   });
 });
