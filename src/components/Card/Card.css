@@ -48,7 +48,6 @@
   font-size: 0.9rem;
 }
 
-.card__button,
 .delete-button {
   position: absolute;
   bottom: 1rem;
@@ -58,19 +57,6 @@
   background-color: transparent;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
-}
-
-.card__button_icon {
-  transition: all 0.2s ease-in-out;
-}
-
-.card__button:hover .card__button_icon {
-  transform: scale(1.1);
-}
-
-.favourite {
-  fill: rgb(232, 215, 28);
-  stroke: rgb(232, 215, 28);
 }
 
 .card__rating {

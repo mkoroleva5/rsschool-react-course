@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import './CatsPage.css';
 import catImage from '../../assets/images/cat.jpg';
-import { Card, CardProps } from '../CardComponent/Card';
+import { useSelector, useDispatch } from 'react-redux';
+import { addCat } from '../../store/catsSlice';
+import { Card, CardProps } from '../Card/Card';
 import { TextInput } from '../BasicComponents/Inputs/TextInput';
 import { SelectInput } from '../BasicComponents/Inputs/SelectInput';
 import { DateInput } from '../BasicComponents/Inputs/DateInput';
@@ -12,11 +14,7 @@ import { FileInput } from '../BasicComponents/Inputs/FileInput';
 import { CheckboxInput } from '../BasicComponents/Inputs/CheckboxInput';
 import { Popup } from '../BasicComponents/Popup';
 import { Modal } from '../BasicComponents/Modal';
-
-interface FormStateProps {
-  cats: CardProps[];
-  imageSrc: string | ArrayBuffer;
-}
+import { RootState } from 'store';
 
 export interface IFormValues {
   name: string;
@@ -29,6 +27,9 @@ export interface IFormValues {
 }
 
 export const CatsPage = () => {
+  const cats = useSelector((state: RootState) => state.cats.cats);
+  const dispatch = useDispatch();
+
   const {
     register,
     watch,
@@ -37,50 +38,33 @@ export const CatsPage = () => {
     reset,
   } = useForm({ mode: 'onBlur' });
 
-  const getCatsList = () => {
-    const catsList = localStorage.getItem('cats-list');
-
-    try {
-      return catsList ? (JSON.parse(catsList) as CardProps[]) : [];
-    } catch (err) {
-      localStorage.removeItem('cats-list');
-      return [];
-    }
-  };
-
   const [isCreated, setIsCreated] = useState(false);
   const [openedId, setOpenedId] = useState<number | null>(null);
-  const [state, setState] = useState<FormStateProps>({
-    cats: getCatsList(),
-    imageSrc: '',
-  });
-
-  useEffect(() => {
-    localStorage.setItem('cats-list', JSON.stringify(state.cats));
-  }, [state]);
-
-  const addCat = (cat: CardProps) => {
-    setState({ ...state, cats: [...state.cats, cat] });
-    localStorage.setItem('cats-list', JSON.stringify(state.cats));
-  };
+  const [imageSrc, setImageSrc] = useState<string | ArrayBuffer>('');
 
   const onSubmit = (data: FieldValues) => {
     setIsCreated(true);
-    addCat({
-      id: state.cats.length ? state.cats[state.cats.length - 1].id + 1 : 1,
-      name: data.name || '',
-      breed: data.breed,
-      description: `Date of birth: ${data.date.split('-').reverse().join('.')}` || '',
-      gender: data.gender,
-      cuteness: data.cuteness,
-      info: `Favourite meals: ${data.meals.join(', ')}`,
-      image: state.imageSrc ? `${state.imageSrc}` : catImage,
-    });
+    dispatch(
+      addCat({
+        id: cats.length ? cats[cats.length - 1].id + 1 : 1,
+        name: data.name || '',
+        breed: data.breed,
+        description: `Date of birth: ${data.date.split('-').reverse().join('.')}` || '',
+        gender: data.gender,
+        cuteness: data.cuteness,
+        info: `Favourite meals: ${data.meals.join(', ')}`,
+        image: imageSrc ? `${imageSrc}` : catImage,
+      })
+    );
     reset();
   };
 
+  useEffect(() => {
+    localStorage.setItem('cats-list', JSON.stringify(cats));
+  }, [cats]);
+
   const handleUpload = (value: string | ArrayBuffer) => {
-    setState({ ...state, imageSrc: value });
+    setImageSrc(value);
   };
 
   const handleOpening = (id: number) => {
@@ -93,12 +77,6 @@ export const CatsPage = () => {
 
   const handleClose = () => {
     setIsCreated(false);
-  };
-
-  const handleDelete = (id: number) => {
-    const deletedCatIndex = state.cats.findIndex((el) => el.id === id);
-    setState({ ...state, cats: state.cats.filter((_, i) => i !== deletedCatIndex) });
-    localStorage.setItem('cats-list', JSON.stringify(state.cats));
   };
 
   return (
@@ -123,15 +101,14 @@ export const CatsPage = () => {
         </form>
       </section>
       <section className="cats__list_wrapper">
-        {state.cats.map((cat: CardProps) => {
+        {cats.map((cat: CardProps) => {
           return (
             <Card
               key={`${cat.name}-${cat.id}`}
               {...cat}
-              showFavourites={false}
+              page="cats"
               isRemovable={true}
               onOpening={handleOpening}
-              onDelete={handleDelete}
             />
           );
         })}

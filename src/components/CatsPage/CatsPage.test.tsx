@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { CatsPage } from './CatsPage';
-import { LocalStorageMock } from '../../components/CardComponent/Card.test';
+import { LocalStorageMock } from '../Card/Card.test';
 
 const cat = {
   id: 1,
