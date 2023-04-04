@@ -4,9 +4,9 @@ import { HomePage } from './HomePage';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import noImage from '../../assets/images/default.jpg';
-import { Card } from '../CardComponent/Card';
+import { Card } from '../Card/Card';
 import data from '../../data/data.json';
-import { LocalStorageMock } from '../../components/CardComponent/Card.test';
+import { LocalStorageMock } from '../Card/Card.test';
 import { createApi } from 'unsplash-js';
 
 const item = data[0];
@@ -123,23 +123,6 @@ describe('Cards wrapper tests', () => {
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, value);
     expect(input.value).toBe(value);
-  });
-
-  it('displays error when localStorage data is invalid', () => {
-    render(<HomePage />);
-    window.localStorage.setItem('cards-list', 'abc');
-    let parsedCardsList = null;
-
-    try {
-      const cardsList = window.localStorage.getItem('cards-list');
-      if (cardsList !== null) {
-        parsedCardsList = JSON.parse(cardsList);
-      }
-    } catch (err) {
-      window.localStorage.setItem('cards-list', '');
-    }
-
-    expect(parsedCardsList).toBe(null);
   });
 
   it('deletes data from localStorage when delete button is clicked', async () => {

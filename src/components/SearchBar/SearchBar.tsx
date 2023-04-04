@@ -1,6 +1,8 @@
 import './SearchBar.css';
 import searchIcon from '../../assets/icons/search.svg';
-import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import { addSearchValue, clearSearchValue } from '../../store/cardsSlice';
 
 export interface IFormValues {
   search: string;
@@ -10,11 +12,8 @@ interface SearchBarProps {
 }
 
 export const SearchBar = ({ onSubmit }: SearchBarProps) => {
-  const [searchValue, setSearchValue] = useState(localStorage.getItem('search-value') || '');
-
-  useEffect(() => {
-    localStorage.setItem('search-value', searchValue);
-  }, [searchValue]);
+  const searchValue = useSelector((state: RootState) => state.cards.search);
+  const dispatch = useDispatch();
 
   return (
     <form
@@ -23,7 +22,7 @@ export const SearchBar = ({ onSubmit }: SearchBarProps) => {
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(searchValue);
-        setSearchValue('');
+        dispatch(clearSearchValue(null));
       }}
     >
       <input
@@ -35,7 +34,7 @@ export const SearchBar = ({ onSubmit }: SearchBarProps) => {
         autoComplete="off"
         onChange={(e) => {
           const { value } = e.target;
-          setSearchValue(value);
+          dispatch(addSearchValue({ value }));
         }}
       />
       <label className="search__label">Search</label>

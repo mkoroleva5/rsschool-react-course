@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 import { SearchBar } from './SearchBar';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
-import { LocalStorageMock } from '../../components/CardComponent/Card.test';
+import { LocalStorageMock } from '../Card/Card.test';
 
 describe('Search bar tests', () => {
   beforeEach(() => {
