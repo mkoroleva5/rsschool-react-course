@@ -1,14 +1,10 @@
 import './HomePage.css';
 import { SearchBar } from '../../components/SearchBar/SearchBar';
 import { Card, CardProps } from '../../components/CardComponent/Card';
-import { useEffect, useState } from 'react';
-import { createApi } from 'unsplash-js';
+import { useContext, useEffect, useState } from 'react';
 import { ProgressBar } from '../BasicComponents/ProgressBar';
 import { Modal } from '../BasicComponents/Modal';
-
-const unsplash = createApi({
-  accessKey: 'E5bvAoy3CzFiyPKWtrefHM0hluG_543-BOZxiJ0XNfY',
-});
+import { ApiContext } from '../../api/ApiContext';
 
 interface StateProps {
   searchValue: string;
@@ -16,6 +12,8 @@ interface StateProps {
 }
 
 export const HomePage = () => {
+  const unsplashApi = useContext(ApiContext);
+
   const getCardsList = () => {
     const cardsList = localStorage.getItem('cards-list');
 
@@ -35,23 +33,25 @@ export const HomePage = () => {
     cards: getCardsList(),
   });
 
-  const handleSubmit = async (query: string) => {
+  const handleSubmit = (query: string) => {
     setIsPending(true);
     setIsResult(true);
 
-    await unsplash.search
+    unsplashApi.search
       .getPhotos({
         query: query,
         orientation: 'landscape',
       })
-      .then((resolve) => {
+      .then(({ response }) => {
         setIsPending(false);
 
-        const results = resolve.response?.results;
+        const results = response?.results;
+
         if (results?.length === 0) {
           setState({ ...state, cards: [] });
           setIsResult(false);
         }
+
         if (results && results.length > 0) {
           const cardsArr = results.map((item, index) => {
             return {
@@ -68,10 +68,10 @@ export const HomePage = () => {
               image: item.urls.regular,
             };
           });
+
           setState({ ...state, searchValue: '', cards: cardsArr });
         }
       })
-
       .catch((err) => {
         console.log(err);
         setIsResult(false);
@@ -103,7 +103,7 @@ export const HomePage = () => {
       <SearchBar onSubmit={handleSubmit} />
       {isPending && <ProgressBar />}
       {!isResult && <p>No results 🙁</p>}
-      <div className="cards__wrapper">
+      <div className="cards__wrapper" data-testid="cards-wrapper">
         {state.cards.map((item: CardProps) => {
           return (
             <Card

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
@@ -60,7 +60,9 @@ describe('Modal window tests', async () => {
     expect(spinner).toBeInTheDocument();
 
     const image = screen.getByRole('img');
-    image.dispatchEvent(new Event('load'));
+    act(() => {
+      image.dispatchEvent(new Event('load'));
+    });
     expect(image).toBeInTheDocument();
   });
 
