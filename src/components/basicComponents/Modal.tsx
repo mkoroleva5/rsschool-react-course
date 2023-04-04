@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CardProps } from '../CardComponent/Card';
+import { CardProps } from '../Card/Card';
 import './Modal.css';
 import { Rating } from './Rating';
 import { Spinner } from './Spinner';

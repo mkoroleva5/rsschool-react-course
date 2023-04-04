@@ -1,5 +1,5 @@
 import { FieldErrors, FieldValues, Path, UseFormRegister } from 'react-hook-form';
-import { IFormValues } from '../../CatsPageComponent/CatsPage';
+import { IFormValues } from '../../CatsPage/CatsPage';
 import './FileInput.css';
 import { Tooltip } from '../Tooltip';
 

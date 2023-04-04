@@ -1,4 +1,4 @@
-import { IFormValues } from '../../CatsPageComponent/CatsPage';
+import { IFormValues } from '../../CatsPage/CatsPage';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { FieldValues, UseFormRegister, Path, FieldErrors } from 'react-hook-form';
 
