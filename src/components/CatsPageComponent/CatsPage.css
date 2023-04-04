@@ -44,7 +44,6 @@
 }
 
 .cats__list_wrapper {
-  width: 80%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
