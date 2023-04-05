@@ -3,6 +3,7 @@ import { CardProps } from 'components/Card/Card';
 
 export interface CatsState {
   cats: CardProps[];
+  image: string | ArrayBuffer;
 }
 
 const getCatsList = () => {
@@ -20,6 +21,7 @@ const catsSlice = createSlice<CatsState, SliceCaseReducers<CatsState>>({
   name: 'cats',
   initialState: {
     cats: getCatsList(),
+    image: '',
   },
   reducers: {
     addCat(state, action) {
@@ -30,6 +32,7 @@ const catsSlice = createSlice<CatsState, SliceCaseReducers<CatsState>>({
         breed: action.payload.breed,
         info: action.payload.info,
         gender: action.payload.gender,
+        cuteness: action.payload.cuteness,
         image: action.payload.image,
       });
     },
@@ -37,8 +40,12 @@ const catsSlice = createSlice<CatsState, SliceCaseReducers<CatsState>>({
     removeCat(state, action) {
       state.cats = state.cats.filter((item) => item.id !== action.payload.id);
     },
+
+    uploadImage(state, action) {
+      state.image = action.payload.image;
+    },
   },
 });
 
-export const { addCat, removeCat, clearCats } = catsSlice.actions;
+export const { addCat, removeCat, clearCats, uploadImage } = catsSlice.actions;
 export default catsSlice.reducer;

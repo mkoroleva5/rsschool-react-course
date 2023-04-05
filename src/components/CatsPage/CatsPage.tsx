@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import './CatsPage.css';
 import catImage from '../../assets/images/cat.jpg';
-import { useSelector, useDispatch } from 'react-redux';
-import { addCat } from '../../store/catsSlice';
+import { addCat, uploadImage } from '../../store/catsSlice';
 import { Card, CardProps } from '../Card/Card';
 import { TextInput } from '../BasicComponents/Inputs/TextInput';
 import { SelectInput } from '../BasicComponents/Inputs/SelectInput';
@@ -14,7 +13,8 @@ import { FileInput } from '../BasicComponents/Inputs/FileInput';
 import { CheckboxInput } from '../BasicComponents/Inputs/CheckboxInput';
 import { Popup } from '../BasicComponents/Popup';
 import { Modal } from '../BasicComponents/Modal';
-import { RootState } from 'store';
+import { RootState } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux';
 
 export interface IFormValues {
   name: string;
@@ -27,8 +27,9 @@ export interface IFormValues {
 }
 
 export const CatsPage = () => {
-  const cats = useSelector((state: RootState) => state.cats.cats);
-  const dispatch = useDispatch();
+  const cats = useAppSelector((state: RootState) => state.cats.cats);
+  const stateImage = useAppSelector((state: RootState) => state.cats.image);
+  const dispatch = useAppDispatch();
 
   const {
     register,
@@ -40,10 +41,10 @@ export const CatsPage = () => {
 
   const [isCreated, setIsCreated] = useState(false);
   const [openedId, setOpenedId] = useState<number | null>(null);
-  const [imageSrc, setImageSrc] = useState<string | ArrayBuffer>('');
 
   const onSubmit = (data: FieldValues) => {
     setIsCreated(true);
+
     dispatch(
       addCat({
         id: cats.length ? cats[cats.length - 1].id + 1 : 1,
@@ -53,9 +54,11 @@ export const CatsPage = () => {
         gender: data.gender,
         cuteness: data.cuteness,
         info: `Favourite meals: ${data.meals.join(', ')}`,
-        image: imageSrc ? `${imageSrc}` : catImage,
+        image: stateImage ? `${stateImage}` : catImage,
       })
     );
+
+    dispatch(uploadImage({ image: '' }));
     reset();
   };
 
@@ -63,25 +66,21 @@ export const CatsPage = () => {
     localStorage.setItem('cats-list', JSON.stringify(cats));
   }, [cats]);
 
-  const handleUpload = (value: string | ArrayBuffer) => {
-    setImageSrc(value);
-  };
-
-  const handleOpening = (id: number) => {
+  const handleModalOpening = (id: number) => {
     setOpenedId(id);
   };
 
-  const handleClosing = () => {
+  const handleModalClosing = () => {
     setOpenedId(null);
   };
 
-  const handleClose = () => {
+  const handlePopupClosing = () => {
     setIsCreated(false);
   };
 
   return (
     <div className="cats__wrapper">
-      {isCreated && <Popup onClick={handleClose} />}
+      {isCreated && <Popup onClick={handlePopupClosing} />}
       <section className="cats__form_wrapper">
         <h1>Create your own cat</h1>
         <form data-testid="form" className="cats__form" onSubmit={handleSubmit(onSubmit)}>
@@ -96,7 +95,7 @@ export const CatsPage = () => {
           <RadioInput label="gender" register={register} watch={watch} errors={errors} />
           <RangeInput label="cuteness" register={register} onSubmitSuccess={isSubmitSuccessful} />
           <CheckboxInput label="meals" register={register} errors={errors} />
-          <FileInput label="file" register={register} errors={errors} onUpload={handleUpload} />
+          <FileInput label="file" register={register} errors={errors} />
           <input className="cats__form_submit" type="submit" value="Create" />
         </form>
       </section>
@@ -108,11 +107,11 @@ export const CatsPage = () => {
               {...cat}
               page="cats"
               isRemovable={true}
-              onOpening={handleOpening}
+              onOpening={handleModalOpening}
             />
           );
         })}
-        {openedId !== null && <Modal page={'cats'} id={openedId} onClose={handleClosing} />}
+        {openedId !== null && <Modal page={'cats'} id={openedId} onClose={handleModalClosing} />}
       </section>
     </div>
   );

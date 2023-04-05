@@ -2,15 +2,18 @@ import { FieldErrors, FieldValues, Path, UseFormRegister } from 'react-hook-form
 import { IFormValues } from '../../CatsPage/CatsPage';
 import './FileInput.css';
 import { Tooltip } from '../Tooltip';
+import { useDispatch } from 'react-redux';
+import { uploadImage } from '../../../store/catsSlice';
 
 interface FileInputProps {
   label: Path<IFormValues>;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
-  onUpload: (value: string | ArrayBuffer) => void;
 }
 
-export const FileInput = ({ label, register, errors, onUpload }: FileInputProps) => {
+export const FileInput = ({ label, register, errors }: FileInputProps) => {
+  const dispatch = useDispatch();
+
   return (
     <div className="form__item">
       <input
@@ -27,7 +30,7 @@ export const FileInput = ({ label, register, errors, onUpload }: FileInputProps)
           reader.onload = (event) => {
             const base64String = event.target!.result;
             if (base64String) {
-              onUpload(base64String);
+              dispatch(uploadImage({ image: base64String }));
             }
           };
           reader.readAsDataURL(file);
