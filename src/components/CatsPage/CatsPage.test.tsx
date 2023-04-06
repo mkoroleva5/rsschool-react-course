@@ -8,17 +8,6 @@ import { createStore } from '../../store/index';
 import { createApi } from 'unsplash-js';
 import { Provider } from 'react-redux';
 
-const cat = {
-  id: 1,
-  name: 'Cat',
-  breed: 'Persian',
-  description: 'Date of birth: 2023-03-04',
-  gender: 'F',
-  cuteness: 75,
-  info: 'Favourite meals: fish, milk',
-  image: '',
-};
-
 const unsplashMock = createApi({
   accessKey: '',
 });
