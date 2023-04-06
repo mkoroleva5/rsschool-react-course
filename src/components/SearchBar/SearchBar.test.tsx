@@ -4,33 +4,42 @@ import { SearchBar } from './SearchBar';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { LocalStorageMock } from '../Card/Card.test';
+import { createStore } from '../../store';
+import { createApi } from 'unsplash-js';
+import { Provider } from 'react-redux';
+
+const unsplashMock = createApi({
+  accessKey: '',
+});
+
+const store = createStore(unsplashMock);
+const onSubmitMock = vi.fn();
+
+const Component = () => {
+  return (
+    <Provider store={store}>
+      <SearchBar onSubmit={onSubmitMock} />
+    </Provider>
+  );
+};
 
 describe('Search bar tests', () => {
   beforeEach(() => {
     vi.stubGlobal('localStorage', new LocalStorageMock());
   });
 
-  afterAll(() => {
+  afterEach(() => {
     vi.unstubAllGlobals();
   });
 
-  it('updates search value when input changes', async () => {
-    const value = 'test value';
-    render(<SearchBar onSubmit={() => {}} />);
-
-    const input = screen.getByRole('textbox') as HTMLInputElement;
-    await userEvent.type(input, value);
-    expect(input.value).toBe(value);
-  });
-
-  it('updates search value and saves it to localStorage when form is submitted', async () => {
+  it('updates search value and clears it when form is submitted', async () => {
     const value = 'test value';
     const emptyString = '';
-    render(<SearchBar onSubmit={() => {}} />);
+    render(<Component />);
 
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, value);
-    expect(window.localStorage.getItem('search-value')).toBe(value);
+    expect(input.value).toEqual(value);
 
     fireEvent.submit(input);
     expect(input.value).toBe(emptyString);
@@ -38,8 +47,7 @@ describe('Search bar tests', () => {
   });
 
   it('calls a function on submit', async () => {
-    const onSubmitMock = vi.fn();
-    render(<SearchBar onSubmit={onSubmitMock} />);
+    render(<Component />);
 
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     fireEvent.submit(input);

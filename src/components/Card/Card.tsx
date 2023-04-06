@@ -30,6 +30,7 @@ export const Card = ({ ...props }: CardProps) => {
 
   return (
     <div
+      data-testid={`card-${id}`}
       className="card__wrapper"
       onClick={() => {
         if (onOpening) {

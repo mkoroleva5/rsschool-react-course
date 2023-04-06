@@ -11,7 +11,6 @@ export const HomePage = () => {
   const cards = useAppSelector((state) => state.cards.cards);
   const status = useAppSelector((state) => state.cards.status);
   const error = useAppSelector((state) => state.cards.error);
-
   const dispatch = useAppDispatch();
 
   const [openedId, setOpenedId] = useState<number | null>(null);
@@ -37,8 +36,8 @@ export const HomePage = () => {
       <SearchBar onSubmit={handleSubmit} />
       {status === 'pending' && <ProgressBar />}
       {status === 'no results' && <p>No results 🙁</p>}
-      {error && <p>An error occured: {error instanceof Error ? `${error}` : 'unknown error'}</p>}
-      <div className="cards__wrapper">
+      {error && <p>An error occured: {error}</p>}
+      <div className="cards__wrapper" data-testid="cards-wrapper">
         {cards.map((item: CardProps, index) => {
           return (
             <Card

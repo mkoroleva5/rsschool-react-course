@@ -47,5 +47,5 @@ const catsSlice = createSlice<CatsState, SliceCaseReducers<CatsState>>({
   },
 });
 
-export const { addCat, removeCat, clearCats, uploadImage } = catsSlice.actions;
+export const { addCat, removeCat, uploadImage } = catsSlice.actions;
 export default catsSlice.reducer;

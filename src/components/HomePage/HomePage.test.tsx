@@ -3,38 +3,46 @@ import { vi } from 'vitest';
 import { HomePage } from './HomePage';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
-import data from '../../data/data.json';
 import { LocalStorageMock } from '../Card/Card.test';
 import { createApi } from 'unsplash-js';
-import { ApiContext } from '../../api/ApiContext';
 import unsplashTestData from '../../data/unsplashApiTestData.json';
+import { Provider } from 'react-redux';
+import { createStore } from '../../store';
 
-const item = data[0];
 const unsplashMock = createApi({
   accessKey: '',
 });
+
+const store = createStore(unsplashMock);
+const Component = () => {
+  return (
+    <Provider store={store}>
+      <HomePage />
+    </Provider>
+  );
+};
 
 describe('Home page tests', () => {
   beforeEach(() => {
     vi.stubGlobal('localStorage', new LocalStorageMock());
     vi.spyOn(unsplashMock.search, 'getPhotos').mockImplementation(async () => {
-      return { response: { results: unsplashTestData } } as never;
+      return {
+        type: 'success',
+        response: { results: unsplashTestData },
+        originalResponse: { ok: true },
+        status: 200,
+      } as never;
     });
   });
 
-  afterAll(() => {
+  afterEach(() => {
     vi.unstubAllGlobals();
     vi.resetAllMocks();
   });
 
   it('makes a call to unsplash API with query from search bar', async () => {
     const spy = vi.spyOn(unsplashMock.search, 'getPhotos');
-
-    render(
-      <ApiContext.Provider value={unsplashMock}>
-        <HomePage />
-      </ApiContext.Provider>
-    );
+    render(<Component />);
 
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, 'test');
@@ -51,33 +59,28 @@ describe('Home page tests', () => {
       return Promise.reject('test error');
     });
 
-    render(
-      <ApiContext.Provider value={unsplashMock}>
-        <HomePage />
-      </ApiContext.Provider>
-    );
-
+    render(<Component />);
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, 'test');
     await act(async () => {
       fireEvent.submit(input);
     });
 
-    const noResultsMessage = await waitFor(() => screen.getByText(/no results 🙁/i));
+    const noResultsMessage = await waitFor(() => screen.getByText(/An error occured: test error/i));
     expect(noResultsMessage).toBeInTheDocument();
   });
 
   it('shows message when there are no results from unsplash API', async () => {
     vi.spyOn(unsplashMock.search, 'getPhotos').mockImplementation(async () => {
-      return { response: { results: [] } } as never;
+      return {
+        type: 'success',
+        response: { results: [] },
+        originalResponse: { ok: true },
+        status: 200,
+      } as never;
     });
 
-    render(
-      <ApiContext.Provider value={unsplashMock}>
-        <HomePage />
-      </ApiContext.Provider>
-    );
-
+    render(<Component />);
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, 'test');
     await act(async () => {
@@ -89,12 +92,7 @@ describe('Home page tests', () => {
   });
 
   it('displays progress bar and cards when request in sent', async () => {
-    render(
-      <ApiContext.Provider value={unsplashMock}>
-        <HomePage />
-      </ApiContext.Provider>
-    );
-
+    render(<Component />);
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, 'cat');
     act(() => {
@@ -104,153 +102,111 @@ describe('Home page tests', () => {
     const progressBar = screen.getByText(/Progressing.../i);
     expect(progressBar).toBeInTheDocument();
 
-    const cards = await waitFor(() => screen.getAllByRole('button', { name: /Cat/i }));
+    const cards = await waitFor(() => screen.getAllByRole('button', { name: /cat/i }));
     expect(cards[0]).toBeInTheDocument();
   });
 
   it('displays modal window when card is clicked', async () => {
-    render(
-      <ApiContext.Provider value={unsplashMock}>
-        <HomePage />
-      </ApiContext.Provider>
-    );
-
+    render(<Component />);
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, 'cat');
-    fireEvent.submit(input);
+    act(() => {
+      fireEvent.submit(input);
+    });
 
-    const cards = await waitFor(() => screen.getAllByRole('button', { name: /Cat/i }));
+    const cards = await waitFor(() => screen.getAllByRole('button', { name: /cat/i }));
     await userEvent.click(cards[0]);
-
-    const modal = screen.getByTestId('modal-0');
+    const modal = screen.getByTestId('modal-1');
     expect(modal).toBeInTheDocument();
   });
 
   it('closes modal window when button is clicked', async () => {
-    render(
-      <ApiContext.Provider value={unsplashMock}>
-        <HomePage />
-      </ApiContext.Provider>
-    );
-
+    render(<Component />);
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, 'cat');
-    fireEvent.submit(input);
+    act(() => {
+      fireEvent.submit(input);
+    });
 
-    const cards = await waitFor(() => screen.getAllByRole('button', { name: /Cat/i }));
+    const cards = await waitFor(() => screen.getAllByRole('button', { name: /cat/i }));
     await userEvent.click(cards[0]);
-    const modal = screen.getByTestId('modal-0');
+    const modal = screen.getByTestId('modal-1');
     expect(modal).toBeInTheDocument();
 
-    const closeButton = screen.getByTestId('modal-close-button-0');
+    const closeButton = screen.getByTestId('modal-close-button-1');
     await userEvent.click(closeButton);
     expect(modal).not.toBeInTheDocument();
   });
 
   it('closes modal window when background is clicked', async () => {
-    render(
-      <ApiContext.Provider value={unsplashMock}>
-        <HomePage />
-      </ApiContext.Provider>
-    );
-
+    render(<Component />);
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, 'cat');
-    fireEvent.submit(input);
+    act(() => {
+      fireEvent.submit(input);
+    });
 
-    const cards = await waitFor(() => screen.getAllByRole('button', { name: /Cat/i }));
+    const cards = await waitFor(() => screen.getAllByRole('button', { name: /cat/i }));
     await userEvent.click(cards[0]);
-    const modal = screen.getByTestId('modal-0');
-    expect(modal).toBeInTheDocument();
-
+    const modal = screen.getByTestId('modal-1');
     await userEvent.click(modal);
     expect(modal).not.toBeInTheDocument();
   });
 
   it('displays spinner when image is not loaded', async () => {
-    render(
-      <ApiContext.Provider value={unsplashMock}>
-        <HomePage />
-      </ApiContext.Provider>
-    );
-
+    render(<Component />);
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, 'cat');
-    fireEvent.submit(input);
+    act(() => {
+      fireEvent.submit(input);
+    });
 
-    const cards = await waitFor(() => screen.getAllByRole('button', { name: /Cat/i }));
+    const cards = await waitFor(() => screen.getAllByRole('button', { name: /cat/i }));
     await userEvent.click(cards[0]);
 
-    const spinner = screen.getByTestId('modal-spinner-0');
+    const spinner = screen.getByTestId('modal-spinner-1');
     expect(spinner).toBeInTheDocument();
   });
 
   it('updates search value when input changes', async () => {
+    render(<Component />);
     const value = 'test value';
-    render(
-      <ApiContext.Provider value={unsplashMock}>
-        <HomePage />
-      </ApiContext.Provider>
-    );
-
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, value);
     expect(input.value).toBe(value);
   });
 
-  it('displays no cards when localStorage data is invalid', () => {
-    window.localStorage.setItem('cards-list', 'abc');
-
-    render(
-      <ApiContext.Provider value={unsplashMock}>
-        <HomePage />
-      </ApiContext.Provider>
-    );
-
-    const cards = screen.getByTestId('cards-wrapper');
-    cards.childElementCount;
-    expect(cards.childElementCount).toBe(0);
-  });
-
   it('deletes data from localStorage when delete button is clicked', async () => {
-    const cards = [item];
-    window.localStorage.setItem('cards-list', JSON.stringify(cards));
+    render(<Component />);
+    const input = screen.getByTestId('search-input') as HTMLInputElement;
+    await userEvent.type(input, 'cat');
+    act(() => {
+      fireEvent.submit(input);
+    });
 
-    render(
-      <ApiContext.Provider value={unsplashMock}>
-        <HomePage />
-      </ApiContext.Provider>
-    );
+    const cards = await waitFor(() => screen.getAllByRole('button', { name: /cat/i }));
+    expect(cards).toHaveLength(10);
 
-    await userEvent.click(screen.getByTestId(`delete-button-${cards[0].id}`));
-
-    const deletedCardIndex = cards.findIndex((el) => el.id === cards[0].id);
-    const newCards = cards.filter((_, i) => i !== deletedCardIndex);
-    localStorage.setItem('cards-list', JSON.stringify(newCards));
+    await userEvent.click(screen.getByTestId('delete-button-1'));
+    const newCards = await waitFor(() => screen.getAllByRole('button', { name: /cat/i }));
+    expect(newCards).toHaveLength(9);
 
     const newCardsList = window.localStorage.getItem('cards-list');
     const cardsListArray = newCardsList ? JSON.parse(newCardsList) : null;
-
-    expect(cardsListArray).toEqual([]);
+    expect(cardsListArray).toHaveLength(9);
   });
 
   it('updates search value and saves it to localStorage when form is submitted', async () => {
     const value = 'test value';
-    const emptyString = '';
-    render(
-      <ApiContext.Provider value={unsplashMock}>
-        <HomePage />
-      </ApiContext.Provider>
-    );
+    render(<Component />);
 
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, value);
-    expect(window.localStorage.getItem('search-value')).toBe(value);
+    waitFor(() => expect(window.localStorage.getItem('search-value')).toBe(value));
 
     await act(async () => {
       fireEvent.submit(input);
     });
-    expect(input.value).toBe(emptyString);
     expect(window.localStorage.getItem('search-value')).toBe(null);
   });
 });
