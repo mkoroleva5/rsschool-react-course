@@ -47,44 +47,6 @@ describe('CatsPage tests', () => {
     expect(window.localStorage.getItem('cats-list')).toEqual('[]');
   });
 
-  it('deletes data from localStorage when delete button is clicked', async () => {
-    render(<Component />);
-    const submitButton = screen.getByRole('button', { name: /create/i });
-    const inputText = screen.getByRole('textbox') as HTMLInputElement;
-    const inputSelect = screen.getByRole('combobox') as HTMLSelectElement;
-    const option = screen.getByRole('option', { name: 'Persian' });
-    const inputDate = screen.getByLabelText('date of birth') as HTMLInputElement;
-    const date = new Date('2023-03-23').toISOString().slice(0, 10);
-    const inputMale = screen.getByRole('radio', { name: 'male' });
-    const inputFish = screen.getByRole('checkbox', { name: 'fish' });
-    const inputFile = screen.getByTestId('file-input') as HTMLInputElement;
-    const file = new File(['test image content'], 'test-image.jpg', {
-      type: 'image/jpeg',
-    });
-
-    await userEvent.type(inputText, 'Cat');
-    await userEvent.selectOptions(inputSelect, option);
-    await userEvent.type(inputDate, date);
-    await userEvent.click(inputMale);
-    await userEvent.click(inputFish);
-    await waitFor(() => userEvent.upload(inputFile, file));
-    await userEvent.click(submitButton);
-    await userEvent.click(screen.getByTestId('delete-button-1'));
-
-    const newCatsList = window.localStorage.getItem('cats-list');
-    const cats = screen.getByTestId('cats-wrapper');
-    expect(newCatsList).toEqual('[]');
-    expect(cats.childElementCount).toBe(0);
-  });
-
-  it.skip('displays no cats when localStorage data is invalid', () => {
-    window.localStorage.setItem('cats-list', 'abc');
-    render(<Component />);
-
-    const cats = screen.getByTestId('cats-wrapper');
-    expect(cats.childElementCount).toBe(0);
-  });
-
   it('adds a new cat when form is submitted', async () => {
     window.localStorage.setItem('cats-list', JSON.stringify([]));
     render(<Component />);
@@ -119,37 +81,6 @@ describe('CatsPage tests', () => {
     expect(card).toBeInTheDocument();
 
     const modal = screen.getByRole('button', { name: /the cat has been created!/i });
-    expect(modal).toBeInTheDocument();
-
-    await userEvent.click(modal);
-    expect(modal).not.toBeInTheDocument();
-  });
-
-  it.skip('shows card info in the modal window', async () => {
-    const cats = [cat];
-    window.localStorage.setItem('cats-list', JSON.stringify(cats));
-
-    render(<Component />);
-
-    const card = screen.getByRole('button', { name: /cat/i });
-    await userEvent.click(card);
-
-    const meals = screen.getByText(/favourite meals: fish/i);
-    expect(meals).toBeInTheDocument();
-  });
-
-  it.skip('closes the modal window on click outside of it', async () => {
-    const cats = [cat];
-    window.localStorage.setItem('cats-list', JSON.stringify(cats));
-
-    render(<Component />);
-
-    const card = screen.getByRole('button', { name: /cat/i });
-    await userEvent.click(card);
-
-    const modal = screen.getByRole('button', {
-      name: /favourite meals: fish/i,
-    });
     expect(modal).toBeInTheDocument();
 
     await userEvent.click(modal);

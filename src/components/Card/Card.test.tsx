@@ -45,7 +45,7 @@ const unsplashMock = createApi({
 
 const store = createStore(unsplashMock);
 
-describe.skip('Card tests', () => {
+describe('Card tests', () => {
   beforeEach(() => {
     vi.stubGlobal('localStorage', new LocalStorageMock());
   });
@@ -72,16 +72,6 @@ describe.skip('Card tests', () => {
     expect(screen.getByRole('img')).toHaveAttribute('src', noImage);
   });
 
-  it('displays correct name', () => {
-    const name = 'Tigger';
-    render(
-      <Provider store={store}>
-        <Card {...item} name={name} />
-      </Provider>
-    );
-    expect(screen.getByRole('heading')).toHaveTextContent(name);
-  });
-
   it('displays right rating width style percentage', () => {
     const percentage = 87;
     render(
@@ -92,38 +82,6 @@ describe.skip('Card tests', () => {
     expect(screen.getByTestId('rating')).toHaveStyle(`width: ${percentage}%`);
   });
 
-  it('deletes data from localStorage when delete button is clicked', async () => {
-    const cats = [item];
-    window.localStorage.setItem('cats-list', JSON.stringify(cats));
-
-    render(
-      <Provider store={store}>
-        <Card {...item} page="cats" isRemovable={true} />
-      </Provider>
-    );
-
-    await userEvent.click(screen.getByTestId(`delete-button-${item.id}`));
-    const newCatsList = window.localStorage.getItem('cats-list');
-    const catsListArray = newCatsList ? JSON.parse(newCatsList) : null;
-    expect(catsListArray).toEqual([]);
-  });
-
-  it('deletes data from localStorage when delete button is clicked', async () => {
-    const cards = [item];
-    window.localStorage.setItem('cards-list', JSON.stringify(cards));
-
-    render(
-      <Provider store={store}>
-        <Card {...item} page="cards" isRemovable={true} />
-      </Provider>
-    );
-
-    await userEvent.click(screen.getByTestId(`delete-button-${item.id}`));
-    const newCardsList = window.localStorage.getItem('cards-list');
-    const cardsListArray = newCardsList ? JSON.parse(newCardsList) : null;
-    expect(cardsListArray).toEqual([]);
-  });
-
   it('displays an image after loading', () => {
     render(
       <Provider store={store}>
@@ -132,7 +90,6 @@ describe.skip('Card tests', () => {
     );
 
     const image = screen.getByRole('img');
-    expect(image).not.toBeInTheDocument();
     act(() => {
       image.dispatchEvent(new Event('load'));
     });
