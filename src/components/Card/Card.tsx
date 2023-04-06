@@ -44,7 +44,7 @@ export const Card = ({ ...props }: CardProps) => {
         data-testid={`image-${id}`}
         src={image || noImage}
         alt={name}
-        className="card__image"
+        className={`${page === 'cards' ? 'card__image_cards' : 'card__image_cats'}`}
         draggable={false}
         onLoad={() => {
           setIsLoaded(true);
@@ -52,10 +52,12 @@ export const Card = ({ ...props }: CardProps) => {
         style={!isLoaded ? { opacity: 0 } : { opacity: 1 }}
       />
       {!isLoaded && <Spinner />}
-      <div className="card__info">
-        <h3 className="card__title">{name}</h3>
-      </div>
-      <p className="card__gender">{gender}</p>
+      {page === 'cats' && (
+        <div className="card__info">
+          <h3 className="card__title">{name}</h3>
+        </div>
+      )}
+      <p className={`${page === 'cards' ? 'card__gender_cards' : 'card__gender_cats'}`}>{gender}</p>
       {cuteness && (
         <div className="card__rating">
           <Rating size={35} cuteness={cuteness} />
