@@ -32,6 +32,7 @@ describe('Modal window tests', async () => {
 
     const closeButton = screen.getByTestId('modal-close-button-1');
     await userEvent.click(closeButton);
+    expect(onCloseMock).toHaveBeenCalled();
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
 

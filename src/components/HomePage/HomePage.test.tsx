@@ -91,6 +91,27 @@ describe('Home page tests', () => {
     expect(noResultsMessage).toBeInTheDocument();
   });
 
+  it('shows message when there is an error from unsplash API', async () => {
+    vi.spyOn(unsplashMock.search, 'getPhotos').mockImplementation(async () => {
+      return {
+        type: 'error',
+        response: { results: undefined },
+        originalResponse: { ok: false },
+        status: 400,
+      } as never;
+    });
+
+    render(<Component />);
+    const input = screen.getByTestId('search-input') as HTMLInputElement;
+    await userEvent.type(input, 'test');
+    await act(async () => {
+      fireEvent.submit(input);
+    });
+
+    const errorMessage = await waitFor(() => screen.getByText(/An error occured: Server Error/i));
+    expect(errorMessage).toBeInTheDocument();
+  });
+
   it('displays progress bar and cards when request in sent', async () => {
     render(<Component />);
     const input = screen.getByTestId('search-input') as HTMLInputElement;

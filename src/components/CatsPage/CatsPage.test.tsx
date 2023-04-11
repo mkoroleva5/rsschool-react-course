@@ -273,4 +273,34 @@ describe('CatsPage tests', () => {
     const rating = screen.getByTestId('modal-rating-2');
     expect(rating).toBeInTheDocument();
   });
+
+  it('deletes the card when delete button is clicked', async () => {
+    render(<Component />);
+    const submitButton = screen.getByRole('button', { name: /create/i });
+    const inputText = screen.getByRole('textbox') as HTMLInputElement;
+    const inputSelect = screen.getByRole('combobox') as HTMLSelectElement;
+    const option = screen.getByRole('option', { name: 'Persian' });
+    const inputDate = screen.getByLabelText('date of birth') as HTMLInputElement;
+    const date = new Date('2023-03-23').toISOString().slice(0, 10);
+    const inputMale = screen.getByRole('radio', { name: 'male' });
+    const inputFish = screen.getByRole('checkbox', { name: 'fish' });
+    const inputFile = screen.getByTestId('file-input') as HTMLInputElement;
+    const file = new File(['test image content'], 'test-image.jpg', {
+      type: 'image/jpeg',
+    });
+
+    await userEvent.type(inputText, 'Cat');
+    await userEvent.selectOptions(inputSelect, option);
+    await userEvent.type(inputDate, date);
+    await userEvent.click(inputMale);
+    await userEvent.click(inputFish);
+    await waitFor(() => userEvent.upload(inputFile, file));
+    await userEvent.click(submitButton);
+
+    const card = screen.getByTestId('card-2');
+    const deleteButton = screen.getByTestId('delete-button-2');
+    await userEvent.click(deleteButton);
+
+    expect(card).not.toBeInTheDocument();
+  });
 });
