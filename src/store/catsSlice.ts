@@ -1,4 +1,5 @@
-import { SliceCaseReducers, createSlice } from '@reduxjs/toolkit';
+import { SliceCaseReducers } from '@reduxjs/toolkit';
+import toolkit from './toolkit';
 import { CardProps } from '../components/Card/Card';
 
 export interface CatsState {
@@ -6,6 +7,7 @@ export interface CatsState {
   image: string | ArrayBuffer;
 }
 
+const { createSlice } = toolkit;
 const catsSlice = createSlice<CatsState, SliceCaseReducers<CatsState>>({
   name: 'cats',
   initialState: {

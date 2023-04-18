@@ -19,6 +19,6 @@
     "esModuleInterop": true,
     "baseUrl": "./src"
   },
-  "include": ["./src/**/*", "styled.d.ts"],
+  "include": ["./src/**/*", "./src/types/index.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -21,4 +21,11 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        interop: 'compat',
+      },
+    },
+  },
 });

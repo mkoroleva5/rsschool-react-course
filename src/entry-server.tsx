@@ -20,7 +20,5 @@ export const render = (url: string, options: RenderToPipeableStreamOptions) => {
     options
   );
   const preloadedState = store.getState();
-  console.log(preloadedState);
-
   return { stream, preloadedState };
 };

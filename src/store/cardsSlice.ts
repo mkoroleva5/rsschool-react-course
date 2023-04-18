@@ -1,4 +1,5 @@
-import { SliceCaseReducers, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { SliceCaseReducers } from '@reduxjs/toolkit';
+import toolkit from './toolkit';
 import { CardProps } from '../components/Card/Card';
 import { createApi } from 'unsplash-js';
 import { Basic } from 'unsplash-js/dist/methods/photos/types';
@@ -11,6 +12,8 @@ export interface CardsState {
   status: string | null;
   error: string | null;
 }
+
+const { createAsyncThunk, createSlice } = toolkit;
 
 export const fetchPhotos = createAsyncThunk<
   Basic[] | undefined,
