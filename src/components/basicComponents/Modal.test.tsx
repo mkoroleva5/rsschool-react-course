@@ -17,7 +17,7 @@ const cat = {
 
 describe('Modal window tests', async () => {
   it('displays modal window when card is clicked', async () => {
-    render(<Modal page="" id={1} onClose={() => {}} />);
+    render(<Modal id={1} onClose={() => {}} />);
 
     const modal = screen.getByTestId('modal-1');
     expect(modal).toBeInTheDocument();
@@ -25,7 +25,7 @@ describe('Modal window tests', async () => {
 
   it('closes modal window when button is clicked', async () => {
     const onCloseMock = vi.fn();
-    render(<Modal page="" id={1} onClose={onCloseMock} />);
+    render(<Modal id={1} onClose={onCloseMock} />);
 
     const modal = screen.getByTestId('modal-1');
     expect(modal).toBeInTheDocument();
@@ -38,7 +38,7 @@ describe('Modal window tests', async () => {
 
   it('closes modal window when background is clicked', async () => {
     const onCloseMock = vi.fn();
-    render(<Modal page="" id={1} onClose={onCloseMock} />);
+    render(<Modal id={1} onClose={onCloseMock} />);
 
     const modal = screen.getByTestId('modal-1');
     expect(modal).toBeInTheDocument();
@@ -49,14 +49,14 @@ describe('Modal window tests', async () => {
 
   it('displays error when localStorage data is invalid', () => {
     window.localStorage.setItem('cards-list', 'abc');
-    render(<Modal page="cards" id={1} onClose={() => {}} />);
+    render(<Modal id={1} onClose={() => {}} />);
 
     const modalTitle = screen.getByRole('heading');
     expect(modalTitle.textContent).toBe('');
   });
 
   it('displays spinner before loading and an image after loading', () => {
-    render(<Modal page="" id={1} onClose={() => {}} />);
+    render(<Modal id={1} onClose={() => {}} />);
     const spinner = screen.getByTestId('modal-spinner-1');
     expect(spinner).toBeInTheDocument();
 
@@ -69,7 +69,7 @@ describe('Modal window tests', async () => {
 
   it('displays rating if it exists in the card props', () => {
     window.localStorage.setItem('cards-list', JSON.stringify([cat]));
-    render(<Modal page="cards" id={1} onClose={() => {}} />);
+    render(<Modal id={1} onClose={() => {}} />);
 
     const rating = screen.getByTestId('modal-rating-1');
     expect(rating).toBeInTheDocument();
