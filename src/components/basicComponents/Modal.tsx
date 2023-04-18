@@ -1,28 +1,17 @@
 import { useState } from 'react';
-import { CardProps } from '../Card/Card';
 import './Modal.css';
 import { Rating } from './Rating';
 import { Spinner } from './Spinner';
+import { useAppSelector } from '../../hooks/useRedux';
 
 interface ModalProps {
-  page: string;
   id: number | null;
   onClose: () => void;
 }
 
-export const Modal = ({ page, id, onClose }: ModalProps) => {
-  const getCardsList = () => {
-    const cardsList = localStorage.getItem(`${page}-list`);
-
-    try {
-      return cardsList ? (JSON.parse(cardsList) as CardProps[]) : [];
-    } catch (err) {
-      localStorage.removeItem('cards-list');
-      return [];
-    }
-  };
-
-  const card = getCardsList().find((el) => el.id === id);
+export const Modal = ({ id, onClose }: ModalProps) => {
+  const cards = useAppSelector((state) => state.cards.cards);
+  const card = cards.find((el) => el.id === id);
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
