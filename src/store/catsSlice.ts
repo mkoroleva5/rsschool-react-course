@@ -6,7 +6,7 @@ export interface CatsState {
   image: string | ArrayBuffer;
 }
 
-const getCatsList = () => {
+/*const getCatsList = () => {
   const cardsList = localStorage.getItem('cats-list');
 
   try {
@@ -15,12 +15,12 @@ const getCatsList = () => {
     localStorage.removeItem('cats-list');
     return [];
   }
-};
+};*/
 
 const catsSlice = createSlice<CatsState, SliceCaseReducers<CatsState>>({
   name: 'cats',
   initialState: {
-    cats: getCatsList(),
+    cats: [], //getCatsList(),
     image: '',
   },
   reducers: {

@@ -10,7 +10,7 @@ export interface CardsState {
   error: string | null;
 }
 
-const getCardsList = () => {
+/*const getCardsList = () => {
   const cardsList = localStorage.getItem('cards-list');
 
   try {
@@ -19,7 +19,7 @@ const getCardsList = () => {
     localStorage.removeItem('cards-list');
     return [];
   }
-};
+};*/
 
 export const fetchPhotos = createAsyncThunk<
   Basic[] | undefined,
@@ -49,7 +49,7 @@ export const fetchPhotos = createAsyncThunk<
 const cardsSlice = createSlice<CardsState, SliceCaseReducers<CardsState>>({
   name: 'cards',
   initialState: {
-    cards: getCardsList(),
+    cards: [], //getCardsList(),
     search: '',
     status: null,
     error: null,
