@@ -3,8 +3,7 @@
     "composite": true,
     "module": "ESNext",
     "moduleResolution": "Node",
-    "allowSyntheticDefaultImports": true,
-    "jsx": "react-jsx"
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*.tsx", "vite.config.ts", "src/vite-env.d.ts", "src/store"]
+  "include": ["vite.config.ts"]
 }

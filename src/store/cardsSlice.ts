@@ -2,24 +2,15 @@ import { SliceCaseReducers, createAsyncThunk, createSlice } from '@reduxjs/toolk
 import { CardProps } from '../components/Card/Card';
 import { createApi } from 'unsplash-js';
 import { Basic } from 'unsplash-js/dist/methods/photos/types';
+import { getCookie } from '../utils/cookie';
 
 export interface CardsState {
   cards: CardProps[];
   search: string;
+  queryResult: string;
   status: string | null;
   error: string | null;
 }
-
-/*const getCardsList = () => {
-  const cardsList = localStorage.getItem('cards-list');
-
-  try {
-    return cardsList ? (JSON.parse(cardsList) as CardProps[]) : [];
-  } catch (err) {
-    localStorage.removeItem('cards-list');
-    return [];
-  }
-};*/
 
 export const fetchPhotos = createAsyncThunk<
   Basic[] | undefined,
@@ -49,8 +40,9 @@ export const fetchPhotos = createAsyncThunk<
 const cardsSlice = createSlice<CardsState, SliceCaseReducers<CardsState>>({
   name: 'cards',
   initialState: {
-    cards: [], //getCardsList(),
+    cards: [],
     search: '',
+    queryResult: getCookie('search') || '',
     status: null,
     error: null,
   },
@@ -61,6 +53,10 @@ const cardsSlice = createSlice<CardsState, SliceCaseReducers<CardsState>>({
 
     clearSearchValue(state) {
       state.search = '';
+    },
+
+    setQueryResult(state, action) {
+      state.queryResult = action.payload.value;
     },
 
     removeCard(state, action) {
@@ -108,5 +104,5 @@ const cardsSlice = createSlice<CardsState, SliceCaseReducers<CardsState>>({
   },
 });
 
-export const { removeCard, addSearchValue, clearSearchValue } = cardsSlice.actions;
+export const { removeCard, addSearchValue, clearSearchValue, setQueryResult } = cardsSlice.actions;
 export default cardsSlice.reducer;

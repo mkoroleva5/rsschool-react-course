@@ -3,9 +3,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
 import { createServer } from 'vite';
+import cookieParser from 'cookie-parser';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 5173;
+const isProd = process.env.NODE_ENV === 'production';
 
 const createNodeServer = async () => {
   const app = express();
@@ -15,34 +17,47 @@ const createNodeServer = async () => {
   });
 
   app.use(vite.middlewares);
+  app.use(cookieParser());
 
   app.use('*', async (req, res, next) => {
     const url = req.originalUrl;
 
     try {
-      let template = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
+      let template = isProd
+        ? fs.readFileSync(path.resolve(__dirname, 'dist/index.html'), 'utf-8')
+        : fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
       template = await vite.transformIndexHtml(url, template);
-      const parts = template.split(`<!--app-html-->`);
 
-      const isProd = process.env.NODE_ENV === 'production';
-      const entryServerPath = isProd ? './server/entry-server.js' : '/src/entry-server.tsx';
+      const parts = template.split(`<!--app-html-->`);
+      const queryResult = req.cookies.search;
+
+      const entryServerPath = isProd ? './dist/server/entry-server.js' : '/src/entry-server.tsx';
       const { render } = isProd
         ? await import(entryServerPath)
         : await vite.ssrLoadModule(entryServerPath);
 
-      const { pipe } = await render(url, {
+      const rendered = await render(url, {
         onShellReady() {
           res.write(parts[0]);
           pipe(res);
         },
         onAllReady() {
-          res.write(parts[1]);
+          const { preloadedState } = rendered;
+          const preloadedStateTemplate = `<script>
+            window.__PRELOADED_STATE__ = ${JSON.stringify({
+              ...preloadedState,
+              cards: { ...preloadedState.cards, queryResult },
+            }).replace(/</g, '\\u003c')}
+          </script>`;
+          res.write(parts[1].replace(`<!--preloaded-state-->`, preloadedStateTemplate ?? ''));
           res.end();
         },
         onError(err: Error) {
           console.error(err);
         },
       });
+
+      const { pipe } = rendered.stream;
     } catch (e) {
       const err = e as Error;
       vite.ssrFixStacktrace(err);

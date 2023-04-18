@@ -10,13 +10,17 @@ export const unsplashApi = createApi({
 });
 
 export const render = (url: string, options: RenderToPipeableStreamOptions) => {
+  const store = createStore(unsplashApi);
   const stream = renderToPipeableStream(
-    <Provider store={createStore(unsplashApi)}>
+    <Provider store={store}>
       <StaticRouter location={url}>
         <App />
       </StaticRouter>
     </Provider>,
     options
   );
-  return stream;
+  const preloadedState = store.getState();
+  console.log(preloadedState);
+
+  return { stream, preloadedState };
 };

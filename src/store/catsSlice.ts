@@ -1,26 +1,15 @@
 import { SliceCaseReducers, createSlice } from '@reduxjs/toolkit';
-import { CardProps } from 'components/Card/Card';
+import { CardProps } from '../components/Card/Card';
 
 export interface CatsState {
   cats: CardProps[];
   image: string | ArrayBuffer;
 }
 
-/*const getCatsList = () => {
-  const cardsList = localStorage.getItem('cats-list');
-
-  try {
-    return cardsList ? (JSON.parse(cardsList) as CardProps[]) : [];
-  } catch (err) {
-    localStorage.removeItem('cats-list');
-    return [];
-  }
-};*/
-
 const catsSlice = createSlice<CatsState, SliceCaseReducers<CatsState>>({
   name: 'cats',
   initialState: {
-    cats: [], //getCatsList(),
+    cats: [],
     image: '',
   },
   reducers: {

@@ -12,6 +12,7 @@ export const createStore = (api: ReturnType<typeof createApi>) => {
       cards: cardsReducer,
       cats: catsReducer,
     },
+    preloadedState: typeof window !== 'undefined' ? window.__PRELOADED_STATE__ : undefined,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         thunk: {
