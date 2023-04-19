@@ -17,7 +17,8 @@
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "types": ["cypress", "cypress-file-upload"]
   },
   "include": ["./src/**/*", "./src/types/index.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

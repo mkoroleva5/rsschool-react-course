@@ -1,46 +1,115 @@
-//import cy from 'cypress';
-
-describe('My First Test', () => {
-  it('Visits the Kitchen Sink', () => {
+describe('Pages tests', () => {
+  it('checks if cats link works', () => {
     cy.visit('/');
+    cy.get('.header__link').contains('Cats').click();
+    cy.url().should('include', '/cats');
+    cy.get('h1').contains('Create your own cat');
   });
 
-  it('finds the content "type"', () => {
+  it('checks if about link works', () => {
     cy.visit('/');
-
-    cy.get('label').should('contain', 'Search'); // Replace 'h1' and 'Page Heading' with the actual element and text you want to verify
-    //cy.get('button').should('have.text', 'Click me') // Replace 'button' and 'Click me' with the actual element and text you want to verify
+    cy.get('.header__link').contains('About').click();
+    cy.url().should('include', '/about');
+    cy.get('h1').contains('About Us');
   });
 
-  it('clicks the link "type"', () => {
-    cy.visit('https://example.cypress.io');
-
-    cy.contains('type').click();
+  it('checks if 404 page works', () => {
+    cy.visit('/123');
+    cy.get('h1').contains('404');
   });
 
-  it('clicking "type" navigates to a new url', () => {
-    cy.visit('https://example.cypress.io');
-
-    cy.contains('type').click();
-
-    // Should be on a new URL which
-    // includes '/commands/actions'
-    cy.url().should('include', '/commands/actions');
+  it('checks if home link works', () => {
+    cy.visit('/');
+    cy.get('.header__link').contains('About').click();
+    cy.get('.header__link').contains('Home').click();
+    cy.get('.search__label').contains('Search');
   });
 
-  it('Gets, types and asserts', () => {
-    cy.visit('https://example.cypress.io');
+  it('checks if search results are correct', () => {
+    cy.visit('/');
+    cy.get('.search__input').type('cat');
+    cy.get('.search__button').click();
+    cy.get('.card__wrapper').first().should('exist');
+    cy.get('.card__wrapper').first().click();
+    cy.get('.modal__title').contains('cat');
+  });
 
-    cy.contains('type').click();
+  it('opens and closes modal window with card content', () => {
+    cy.visit('/');
+    cy.get('.search__input').type('cat');
+    cy.get('.search__button').click();
+    cy.get('.card__wrapper').first().should('exist');
+    cy.get('.card__wrapper').first().click();
 
-    // Should be on a new URL which
-    // includes '/commands/actions'
-    cy.url().should('include', '/commands/actions');
+    cy.get('.modal__wrapper').should('exist');
+    cy.get('.modal__close-button').click();
+    cy.get('.modal__wrapper').should('not.exist');
 
-    // Get an input, type into it
-    cy.get('.action-email').type('fake@email.com');
+    cy.get('.card__wrapper').first().click();
+    cy.get('.modal__wrapper').should('exist');
+    cy.get('body').click(0, 0);
+    cy.get('.modal__wrapper').should('not.exist');
+  });
 
-    //  Verify that the value has been updated
-    cy.get('.action-email').should('have.value', 'fake@email.com');
+  it('deletes a card from home page', () => {
+    cy.visit('/');
+    cy.get('.search__input').type('cat');
+    cy.get('.search__button').click();
+    cy.get('[data-testid="card-10"]').should('exist');
+    cy.get('[data-testid="delete-button-10"]').click();
+  });
+
+  it('creates a card when form is submitted', () => {
+    cy.visit('/cats');
+
+    cy.get('input[name="name"]').type('Cat');
+    cy.get('select').select('Persian');
+    cy.get('input[name="date"]').type('2023-04-15');
+    cy.get('label[for="male"]').click();
+    cy.get('input[type="range"]').invoke('val', 75).trigger('change');
+    cy.get('.form__checkbox_label').first().click();
+    cy.fixture('cat.jpg').then((fileContent) => {
+      cy.get('input[type="file"]').attachFile({
+        fileContent: fileContent.toString(),
+        fileName: 'cat.jpg',
+        mimeType: 'image/png',
+      });
+    });
+    cy.get('[type="submit"]').click();
+
+    cy.get('.popup__content').contains('The cat has been created!');
+    cy.get('.popup__wrapper').click();
+    cy.get('.popup__content').should('not.exist');
+
+    cy.get('.card__title').contains('Cat');
+    cy.get('[data-testid="delete-button-1"]').click();
+  });
+
+  it('shows error tooltip when the form is invalid', () => {
+    cy.visit('/cats');
+
+    cy.get('[type="submit"]').click();
+    cy.get('.error').eq(0).contains('Enter a name');
+    cy.get('.error').eq(1).contains('Select a breed');
+    cy.get('.error').eq(2).contains('Enter a date of birth');
+    cy.get('.error').eq(3).contains('Select a gender');
+    cy.get('.error').eq(4).contains('Select at least one meal');
+    cy.get('.error').eq(5).contains('Upload an image');
+
+    cy.get('input[name="name"]').type('cat');
+    cy.get('[type="submit"]').click();
+    cy.get('.error')
+      .eq(0)
+      .contains(
+        'The name must start with a capital letter and be between 3 and 12 characters long'
+      );
+
+    cy.get('input[name="date"]').type('2030-04-15');
+    cy.get('[type="submit"]').click();
+    cy.get('.error').eq(2).contains('Max value must be');
+  });
+
+  it('Just a test to remove page load on coverage saving', () => {
+    expect(true).to.equal(true);
   });
 });
