@@ -75,7 +75,11 @@ describe('Pages tests', () => {
         mimeType: 'image/png',
       });
     });
+
+    cy.get('input[type="range"]').should('have.value', 75);
+
     cy.get('[type="submit"]').click();
+    cy.get('input[type="range"]').should('have.value', 50);
 
     cy.get('.popup__content').contains('The cat has been created!');
     cy.get('.popup__wrapper').click();

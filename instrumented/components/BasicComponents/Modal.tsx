@@ -5,12 +5,13 @@ import { Spinner } from './Spinner';
 import { useAppSelector } from '../../hooks/useRedux';
 
 interface ModalProps {
+  page: 'cards' | 'cats';
   id: number | null;
   onClose: () => void;
 }
 
-export const Modal = ({ id, onClose }: ModalProps) => {
-  const cards = useAppSelector((state) => state.cards.cards);
+export const Modal = ({ page, id, onClose }: ModalProps) => {
+  const cards = useAppSelector((state) => (page === 'cards' ? state.cards.cards : state.cats.cats));
   const card = cards.find((el) => el.id === id);
   const [isLoaded, setIsLoaded] = useState(false);
 

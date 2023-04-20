@@ -3,6 +3,7 @@ import { App } from './App';
 import { createStore } from './store/index';
 import { createApi } from 'unsplash-js';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 
 const unsplashMock = createApi({
   accessKey: '',
@@ -14,7 +15,9 @@ describe('App tests', () => {
   it('renders app', () => {
     render(
       <Provider store={store}>
-        <App />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
       </Provider>
     );
   });

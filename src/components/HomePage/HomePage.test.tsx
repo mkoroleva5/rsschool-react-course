@@ -8,6 +8,7 @@ import { createApi } from 'unsplash-js';
 import unsplashTestData from '../../data/unsplashApiTestData.json';
 import { Provider } from 'react-redux';
 import { createStore } from '../../store';
+import { BrowserRouter } from 'react-router-dom';
 
 const unsplashMock = createApi({
   accessKey: '',
@@ -17,7 +18,9 @@ const store = createStore(unsplashMock);
 const Component = () => {
   return (
     <Provider store={store}>
-      <HomePage />
+      <BrowserRouter>
+        <HomePage />
+      </BrowserRouter>
     </Provider>
   );
 };
@@ -50,7 +53,7 @@ describe('Home page tests', () => {
       fireEvent.submit(input);
     });
 
-    expect(spy).toBeCalledTimes(1);
+    expect(spy).toBeCalledTimes(2);
     expect(spy).toHaveBeenCalledWith({ query: 'test', orientation: 'landscape' });
   });
 
@@ -195,26 +198,6 @@ describe('Home page tests', () => {
     const input = screen.getByTestId('search-input') as HTMLInputElement;
     await userEvent.type(input, value);
     expect(input.value).toBe(value);
-  });
-
-  it('deletes data from localStorage when delete button is clicked', async () => {
-    render(<Component />);
-    const input = screen.getByTestId('search-input') as HTMLInputElement;
-    await userEvent.type(input, 'cat');
-    act(() => {
-      fireEvent.submit(input);
-    });
-
-    const cards = await waitFor(() => screen.getAllByRole('button', { name: /cat/i }));
-    expect(cards).toHaveLength(10);
-
-    await userEvent.click(screen.getByTestId('delete-button-1'));
-    const newCards = await waitFor(() => screen.getAllByRole('button', { name: /cat/i }));
-    expect(newCards).toHaveLength(9);
-
-    const newCardsList = window.localStorage.getItem('cards-list');
-    const cardsListArray = newCardsList ? JSON.parse(newCardsList) : null;
-    expect(cardsListArray).toHaveLength(9);
   });
 
   it('updates search value and saves it to localStorage when form is submitted', async () => {

@@ -67,7 +67,7 @@ export const HomePage = () => {
           );
         })}
       </div>
-      {openedId !== null && <Modal id={openedId} onClose={handleClosing} />}
+      {openedId !== null && <Modal page="cards" id={openedId} onClose={handleClosing} />}
     </section>
   );
 };

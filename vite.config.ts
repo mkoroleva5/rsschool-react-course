@@ -34,6 +34,7 @@ export default defineConfig({
         'server.ts',
         'cypress.config.ts',
         'cypress',
+        'instrumented',
         'src/entry-client.tsx',
         'src/entry-server.tsx',
       ],

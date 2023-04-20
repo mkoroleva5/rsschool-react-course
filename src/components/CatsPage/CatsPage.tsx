@@ -111,7 +111,7 @@ export const CatsPage = () => {
             />
           );
         })}
-        {openedId !== null && <Modal id={openedId} onClose={handleModalClosing} />}
+        {openedId !== null && <Modal page="cats" id={openedId} onClose={handleModalClosing} />}
       </section>
     </div>
   );
