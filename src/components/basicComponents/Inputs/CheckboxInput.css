@@ -1,0 +1,103 @@
+.form__checkbox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.form__checkbox_title {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.form__checkbox_options {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.form__checkbox_input {
+  display: none;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.form__checkbox_label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gray-color);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.checkbox {
+  position: relative;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 1px solid #c8ccd4;
+  border-radius: 3px;
+  transition: 0.1s ease;
+  cursor: pointer;
+  display: block;
+}
+
+.checkbox:after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 5.5px;
+  width: 7px;
+  height: 11px;
+  opacity: 0;
+  transform: rotate(45deg) scale(0);
+  border-right: 2px solid var(--white-color);
+  border-bottom: 2px solid var(--white-color);
+  transition: all 0.3s ease;
+  transition-delay: 0.15s;
+}
+
+.form__checkbox_input:checked ~ .checkbox {
+  border-color: transparent;
+  background: #b9dc84;
+  animation: jelly 0.6s ease;
+}
+
+.form__checkbox_input:checked ~ .checkbox:after {
+  opacity: 1;
+  transform: rotate(45deg) scale(1);
+}
+
+.meals-error {
+  transform: translate(1rem, -0.5rem);
+}
+
+@keyframes jelly {
+  from {
+    transform: scale(1, 1);
+  }
+
+  30% {
+    transform: scale(1.25, 0.75);
+  }
+
+  40% {
+    transform: scale(0.75, 1.25);
+  }
+
+  50% {
+    transform: scale(1.15, 0.85);
+  }
+
+  65% {
+    transform: scale(0.95, 1.05);
+  }
+
+  75% {
+    transform: scale(1.05, 0.95);
+  }
+
+  to {
+    transform: scale(1, 1);
+  }
+}

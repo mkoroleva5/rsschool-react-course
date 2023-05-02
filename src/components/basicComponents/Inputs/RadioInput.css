@@ -1,0 +1,46 @@
+.form__gender_wrapper {
+  position: relative;
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 5rem;
+}
+
+.form__gender {
+  position: relative;
+  width: 50%;
+  height: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.form__gender_input {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+.form__gender_label {
+  position: absolute;
+  font-weight: 700;
+  color: rgb(200, 200, 200);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.form__gender_label:hover {
+  transform: scale(1.1);
+}
+
+.form__gender_input:focus:invalid ~ .form__gender_label {
+  color: #ff807a;
+}
+
+.active-gender {
+  color: rgb(149 155 206);
+}
+
+.gender-error {
+  transform: translate(-2.75rem, -1rem);
+}
