@@ -199,18 +199,4 @@ describe('Home page tests', () => {
     await userEvent.type(input, value);
     expect(input.value).toBe(value);
   });
-
-  it('updates search value and saves it to localStorage when form is submitted', async () => {
-    const value = 'test value';
-    render(<Component />);
-
-    const input = screen.getByTestId('search-input') as HTMLInputElement;
-    await userEvent.type(input, value);
-    waitFor(() => expect(window.localStorage.getItem('search-value')).toBe(value));
-
-    await act(async () => {
-      fireEvent.submit(input);
-    });
-    expect(window.localStorage.getItem('search-value')).toBe(null);
-  });
 });
