@@ -1,7 +1,5 @@
 import { getCookie, setCookie } from './cookie';
 
-//const cookie = 'search=cat';
-
 describe('Cookie helpers test', () => {
   it('returns right value from cookie', () => {
     Object.defineProperty(document, 'cookie', {
