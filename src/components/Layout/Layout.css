@@ -1,0 +1,5 @@
+.main {
+  --header-footer-height: 8rem;
+  width: 100%;
+  min-height: calc(100vh - var(--header-footer-height));
+}

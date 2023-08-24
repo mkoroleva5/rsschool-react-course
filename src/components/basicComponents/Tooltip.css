@@ -1,0 +1,38 @@
+.error {
+  position: absolute;
+  right: -17rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 0.5s ease-in-out;
+  animation: tooltip 0.5s ease-in-out;
+}
+
+.error-text {
+  width: 15rem;
+  padding: 8px;
+  background-color: #ff807a;
+  color: var(--white-color);
+  border-radius: 4px;
+}
+
+.error-text::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -8px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px 8px 8px 0;
+  border-color: transparent #ff807a transparent transparent;
+}
+
+@keyframes tooltip {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
